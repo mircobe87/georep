@@ -3,13 +3,19 @@ var georep = {};
 
 // il sottospazio delle opzioni
 georep.options = {};
-georep.options.db = {
-	proto: "http://",
-	host: "127.0.0.1",
-	port: "5984",
-	dbname: "georep_db",
-	admin: ""
-};
+/**
+ * Memorizza le specifiche per raggiungere un server geocouch.
+ * Una volta configurato l'oggetto sara del tipo:
+ * {
+ *     proto: "protocollo di comunicazione (http://, https://, ecc...)",
+ *     host:   "IP o Hostname della macchina",
+ *     port:   "porta sulla quale il server e' in ascolto",
+ *     dbname: "nome del db",
+ *     admin:  "user name e password dell'admin in base64"
+ * }
+ */
+georep.options.db = {};
+
 
 // il sottospazio dei metodi di configurazione
 georep.config = {};
@@ -59,23 +65,46 @@ georep.config.setDBName = function(DBName, callback){
  *         port:  "5984"
  *     }
  * callback ( function(err, data) ):
- *     funczione di callback chiamata sia in caso di errore che di successo;
+ *     funzione di callback chiamata sia in caso di errore che di successo;
  *        err: oggetto che descrive l'errore, se si è verificato;
  *       data: oggetto che mostra le opzioni settate se non si sono verificati errori.
  */
 georep.config.setURLServer = function(URLServer, callback){
 	if (arguments.length < 1){
-		throw "setURLServer() richiede almeno 1 argomenti: URLServer (object).";
+		throw "setURLServer() richiede almeno 1 argomento: URLServer (object).";
 	}
 	else if (!URLServer || typeof URLServer != "object"){
-		if(callback) callback({err: 'Impossibile settare "URLServer", parametro non valido.', params: {URLServer: URLServer}},undefined);
+		if(callback)
+			callback({
+				err: 'Impossibile settare "URLServer", parametro non valido.',
+				params: {
+					URLServer: URLServer
+				}
+			},undefined);
 	}
-	else{
-		//fare un controllo sui valori di URLServer.proto, URLServer.host, URLServer.port?
+	else if (
+	!URLServer.proto || typeof URLServer.proto != "string" ||
+	!URLServer.host  || typeof URLServer.host  != "string" ||
+	!URLServer.port  || typeof URLServer.port  != "string" ){
+		if (callback)
+			callback({
+				err: 'Impossibile settare "URLServer", uno o piu\' properties non valide.',
+				params: {
+					proto: URLServer.proto,
+					host: URLServer.host,
+					port: URLServer.port
+				}
+			},undefined);
+	} else {
 		georep.options.db.proto = URLServer.proto;
 		georep.options.db.host = URLServer.host;
 		georep.options.db.port = URLServer.port;
-		if(callback) callback(undefined, {proto: georep.options.db.proto, host: georep.options.db.host, port: georep.options.db.port});
+		if( callback )
+			callback(undefined, {
+				proto: georep.options.db.proto,
+				host: georep.options.db.host,
+				port: georep.options.db.port
+			});
 	}
-}
+};
 
