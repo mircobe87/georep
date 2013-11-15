@@ -164,7 +164,7 @@ georep.config.setUser = function(user, callback){
 				}
 			},undefined);
 	} else {
-		georep.options.user._id  = "org.couch.user:"+user.name;
+		georep.options.user._id  = "org.couchdb.user:"+user.name;
 		georep.options.user.name = user.name;
 		georep.options.user.password = user.password;
 		georep.options.user.base64 = btoa(user.name+":"+user.password);
@@ -242,3 +242,75 @@ georep.postDoc = function(doc,callback){
 	}
 };
 
+/**
+ * Controlla se un utente è registrato sul server CouchDB (geocouch).
+ * 
+ * callback ( function(err, data) ):
+ * 		funzione di callback, NON OPZIONALE, chiamata sia in caso di errore che di successo;
+ *         err: oggetto che descrive l'errore, se si è verificato;
+ *        data: true se l'utente è già registrato, false se non lo è .
+ */
+georep.checkUser = function(callback){
+	/* callback è obbligatorio perchè checkUser() chiama $.ajax() che è asincrona */	
+	if (!callback){
+		throw "checkUser() richiede il paramentro callback OBBLIGATORIO."
+	}
+	else{
+		/* richiedo info sul db, usando come credenziali di accesso quelle dell'utente georep.options.user, 
+           se l'accesso al db viene negato, significa che l'utente non è registrato */
+		$.ajax({
+			url: georep.options.db.proto+georep.options.db.host+':'+georep.options.db.port,
+			type: 'GET',
+			headers: {
+				'Authorization': 'Basic '+georep.options.user.base64
+			},
+			success: function(data){
+				/*console.log("Utente gia' registrato "+ data);*/
+				callback(undefined, {isRegistered: true});
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				/*console.log('jqXHR: '+ jqXHR + '\ntextStatus: '+textStatus + '\nerrorThrown: '+errorThrown);*/
+				if (errorThrown == 'Unauthorized'){
+					/*console.log("Utente NON registrato");*/
+					callback(undefined, {isRegistered: false});
+				}
+				else{
+					callback({err: "Impossibile capire se l'utente e' registrato", jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
+				}
+			},			
+		});
+	}
+}
+
+/**
+ * Registra l'utente sul server CouchDB(questa funzione dovrà essere fatta poi dal server direttamente)
+ *
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra il messaggio ricevuto se non si sono verificati errori.
+ */
+ 
+georep.signup = function(callback){
+	var usr = georep.options.user;
+	$.ajax({
+		url: georep.options.db.proto+georep.options.db.host+':'+georep.options.db.port+'/_users/'+usr._id,
+		type: 'PUT',
+		data: JSON.stringify({name: usr.name, password: usr.password, nick: usr.nick, mail: usr.mail, type: usr.type, roles: usr.roles}),
+		headers: {
+			'Authorization': 'Basic '+georep.options.db.admin
+		},
+		success: function(data){
+			console.log("Utente registrato con successo! " +data);
+			if (callback) {
+				callback(undefined, data);
+			}
+		},
+		error: function(jqXHR, textStatus, errorThrown){
+			console.log("Utente NON registrato! " + jqXHR + textStatus + errorThrown);
+			if (callback){
+				callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
+			}
+		}
+	});	
+}
