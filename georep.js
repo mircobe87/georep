@@ -179,3 +179,66 @@ georep.config.setUser = function(user, callback){
 	}
 };
 
+/**
+ * Invia un nuovo documento sul database remoto
+ * 
+ * doc (object) :
+ *     {
+ *         title: (string) "titolo del documento",
+ *         msg: (string) "qualche dettaglio in piu'",
+ *         img: (object) {
+ *                           content_type: "image/...",
+ *                           data: "... data in base64 ..."
+ *                       }
+ *         loc: (object) {
+ *                           latitude:  (number) latitudine nord,
+ *                           longitude: (number) longitudine est
+ *                       }
+ *     }
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
+ */ 
+georep.postDoc = function(doc,callback){
+	if( arguments.length < 1 )
+		throw "postDoc() richiede almeno 1 argomento: doc (object).";
+	else if ( typeof doc != "object" ||
+	!doc.title || typeof doc.title != "string" ||
+	!doc.msg   || typeof doc.msg   != "string" ||
+	!doc.img   || typeof doc.img   != "object" ||
+	!doc.img.content_type || typeof doc.img.content_type != "string" ||
+	!doc.img.data         || typeof doc.img.data         != "string" ||
+	!doc.loc || typeof doc.loc != "object" ||
+	!doc.loc.latitude  || typeof doc.loc.latitude  != "number" || doc.loc.latitude  >  90 || doc.loc.latitude  <  -90 ||
+	!doc.loc.longitude || typeof doc.loc.longitude != "number" || doc.loc.longitude > 180 || doc.loc.longitude < -180 ){
+		throw 'Parametro "doc" non valido."
+	} else {
+		var newDoc = {};
+		newDoc.user = georep.options.user._id;
+		newDoc.title = doc.title;
+		newDoc.msg = doc.msg;
+		newDoc.loc = doc.loc;
+		newDoc._attachments = {
+			img: doc.img;
+		};
+		$.ajax({
+			url: georep.options.db.proto +
+			     georep.options.db.host + ':' +
+			     georep.options.db.port + '/' +
+			     georep.options.db.dbname,
+			dataType: 'json',
+			data: JSON.stringify(newDoc),
+			headers: {Authorization: 'Basic ' + georep.options.user.base64},
+			success: function(data){
+				if(callback)
+					callback(undefined,data);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				if(callback)
+					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
+			}
+		});
+	}
+};
+
