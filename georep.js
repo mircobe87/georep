@@ -64,6 +64,18 @@ georep.config.setDBName = function(DBName, callback){
  *       data: oggetto che mostra le opzioni settate se non si sono verificati errori.
  */
 georep.config.setURLServer = function(URLServer, callback){
- // todo ....
+	if (arguments.length < 1){
+		throw "setURLServer() richiede almeno 1 argomenti: URLServer (object).";
+	}
+	else if (!URLServer || typeof URLServer != "object"){
+		if(callback) callback({err: 'Impossibile settare "URLServer", parametro non valido.', params: {URLServer: URLServer}},undefined);
+	}
+	else{
+		//fare un controllo sui valori di URLServer.proto, URLServer.host, URLServer.port?
+		georep.options.db.proto = URLServer.proto;
+		georep.options.db.host = URLServer.host;
+		georep.options.db.port = URLServer.port;
+		if(callback) callback(undefined, {proto: georep.options.db.proto, host: georep.options.db.host, port: georep.options.db.port});
+	}
 }
 
