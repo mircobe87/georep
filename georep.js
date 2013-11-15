@@ -212,7 +212,7 @@ georep.postDoc = function(doc,callback){
 	!doc.loc || typeof doc.loc != "object" ||
 	!doc.loc.latitude  || typeof doc.loc.latitude  != "number" || doc.loc.latitude  >  90 || doc.loc.latitude  <  -90 ||
 	!doc.loc.longitude || typeof doc.loc.longitude != "number" || doc.loc.longitude > 180 || doc.loc.longitude < -180 ){
-		throw 'Parametro "doc" non valido."
+		throw 'Parametro "doc" non valido.'
 	} else {
 		var newDoc = {};
 		newDoc.user = georep.options.user._id;
