@@ -5,7 +5,7 @@ var georep = {};
 georep.options = {};
 /**
  * Memorizza le specifiche per raggiungere un server geocouch.
- * Una volta configurato l'oggetto sara del tipo:
+ * Una volta configurato l'oggetto sara' del tipo:
  * {
  *     proto: "protocollo di comunicazione (http://, https://, ecc...)",
  *     host:   "IP o Hostname della macchina",
@@ -15,7 +15,21 @@ georep.options = {};
  * }
  */
 georep.options.db = {};
-
+/**
+ * Memorizza le specifiche dell'utente che avra' accesso al db.
+ * Una volta configurato l'oggetto sara' del tipo:
+ * {
+ *     _id:      "org.couchdb.user:nomeUtente",
+ *     name:     "nomeUtente",
+ *     password: "laPassword",
+ *     base64:   "nomeUtente:laPassword in base64",
+ *     nick:     "nickname usato dall'utente",
+ *     mail:     "email usata dall'utente",
+ *     type:     "user",
+ *     roles:    []
+ * }
+ */
+georep.options.user = {};
 
 // il sottospazio dei metodi di configurazione
 georep.config = {};
@@ -51,7 +65,7 @@ georep.config.setDBName = function(DBName, callback){
 		if (callback) callback({err: 'Impossibile settare "dbname", parametro non valido.', params: {DBName: DBName}},undefined);
 	} else {
 		georep.options.db.dbname = DBName;
-		if (callback) callback(undefined, {dbname: georep.options.db.name});
+		if (callback) callback(undefined, {dbname: georep.options.db.dbname});
 	}
 };
 
@@ -66,8 +80,8 @@ georep.config.setDBName = function(DBName, callback){
  *     }
  * callback ( function(err, data) ):
  *     funzione di callback chiamata sia in caso di errore che di successo;
- *        err: oggetto che descrive l'errore, se si è verificato;
- *       data: oggetto che mostra le opzioni settate se non si sono verificati errori.
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
  */
 georep.config.setURLServer = function(URLServer, callback){
 	if (arguments.length < 1){
@@ -104,6 +118,63 @@ georep.config.setURLServer = function(URLServer, callback){
 				proto: georep.options.db.proto,
 				host: georep.options.db.host,
 				port: georep.options.db.port
+			});
+	}
+};
+
+/**
+ * Configura l'utente client.
+ * 
+ * user ( object ):
+ *     {
+ *         name:     (string) nome utilizzato per il login,
+ *         password: (string) password utlizzata per il login,
+ *         nick:     (string) nome arbitrario scelto dall'utente,
+ *         mail:     (string) indirizzo e-mail dell'utente
+ *     }
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
+ */ 
+georep.config.setUser = function(user, callback){
+	if (arguments.length < 1){
+		throw "setUser() richiede almeno 1 argomento: user (object).";
+	} else if (!user || typeof user != "object") {
+		if(callback)
+			callback({
+				err: 'Impossibile settare "user", parametro non valido.',
+				params: {
+					user: user
+				}
+			},undefined);
+	} else if (
+	!user.name      || typeof user.name      != "string" ||
+	!user.password  || typeof user.password  != "string" ||
+	!user.nick      || typeof user.nick      != "string" ||
+	!user.mail      || typeof user.mail      != "string" ){
+		if (callback)
+			callback({
+				err: 'Impossibile settare "user", uno o piu\' properties non valide.',
+				params: {
+					name:     user.name,
+					password: user.password,
+					nick:     user.nick,
+					mail:     user.mail
+				}
+			},undefined);
+	} else {
+		georep.options.user._id  = "org.couch.user:"+user.name;
+		georep.options.user.name = user.name;
+		georep.options.user.password = user.password;
+		georep.options.user.base64 = btoa(user.name+":"+user.password);
+		georep.options.user.nick = user.nick;
+		georep.options.user.mail = user.mail;
+		georep.options.user.type = "user";
+		georep.options.user.roles = [];
+		if(callback)
+			callback(undefined,{
+				user: georep.options.user
 			});
 	}
 };
