@@ -164,7 +164,7 @@ georep.config.setUser = function(user, callback){
 				}
 			},undefined);
 	} else {
-		georep.options.user._id  = "org.couch.user:"+user.name;
+		georep.options.user._id  = "org.couchdb.user:"+user.name;
 		georep.options.user.name = user.name;
 		georep.options.user.password = user.password;
 		georep.options.user.base64 = btoa(user.name+":"+user.password);
@@ -193,21 +193,12 @@ georep.checkUser = function(callback){
 	if (!callback){
 		throw "checkUser() richiede il paramentro callback OBBLIGATORIO."
 	}
-	/*controllo se l'utente è stato configurato*/
-	else if (!georep.options.user.base64){
-		callback({err:"checkUser() richiede che l'utente sia configurato.", param: georep.options.user},undefined);
-	}
-	/*controllo se il server è stato configurato*/
-	else if (!georep.options.db.host){
-		callback({err:"checkUser() richiede che il server sia configurato.", param: georep.options.db},undefined);
-	}
 	else{
 		/* richiedo info sul db, usando come credenziali di accesso quelle dell'utente georep.options.user, 
            se l'accesso al db viene negato, significa che l'utente non è registrato */
 		$.ajax({
 			url: georep.options.db.proto+georep.options.db.host+':'+georep.options.db.port,
 			type: 'GET',
-			timeout: 3000,
 			headers: {
 				'Authorization': 'Basic '+georep.options.user.base64
 			},
@@ -228,5 +219,36 @@ georep.checkUser = function(callback){
 		});
 	}
 }
- 
 
+/**
+ * Registra l'utente sul server CouchDB(questa funzione dovrà essere fatta poi dal server direttamente)
+ *
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra il messaggio ricevuto se non si sono verificati errori.
+ */
+ 
+ georep.signup = function(callback){
+ 	var usr = georep.options.user;
+ 	$.ajax({
+ 		url: georep.options.db.proto+georep.options.db.host+':'+georep.options.db.port+'/_users/'+usr._id,
+ 		type: 'PUT',
+ 		data: JSON.stringify({name: usr.name, password: usr.password, nick: usr.nick, mail: usr.mail, type: usr.type, roles: usr.roles}),
+ 		headers: {
+ 			'Authorization': 'Basic '+georep.options.db.admin
+ 		},
+ 		success: function(data){
+ 			console.log("Utente registrato con successo! " +data);
+ 			if (callback) {
+ 				callback(undefined, data);
+ 			}
+ 		},
+ 		error: function(jqXHR, textStatus, errorThrown){
+ 			console.log("Utente NON registrato! " + jqXHR + textStatus + errorThrown);
+ 			if (callback){
+ 				callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
+ 			}
+ 		}
+ 	});	
+ }
