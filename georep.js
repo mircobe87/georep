@@ -7,18 +7,18 @@ georep.constants = {};
 // sezione relativa al database remoto
 georep.db = {
 	admin: {
-		base64: undefined,
-		configured: false
+		base64: undefined, /* credenziali dell'amministratore utilizzate per il login sul DB codificate in 'base64' */
+		configured: false  /* indica se l'amministratore e' stato configurato */
 	},
-	configured: false,
-	name: undefined,
-	host: undefined,
-	port: undefined,
-	proto: undefined
+	configured: false, /* indica se DB e' stato configurato */
+	name: undefined, /* nome del db */
+	host: undefined, /* IP o Hostname della macchin */
+	port: undefined, /* porta sulla quale il server e' in ascolto */
+	proto: undefined /* protocollo di comunicazione (http://, https://, ecc...) */
 };
 /**
  * controlla se tutte le properties del DB sono state configurate e ritorna
- * tale risultate.
+ * tale risultato.
  */
 georep.db.isConfigured = function(){
 	if (this.configured)
@@ -201,57 +201,79 @@ georep.db.postDoc = function(doc,callback){
 
 // sezione relativa all'utente che utilizza il DB
 georep.user = {
-	_id: undefined,
-	base64: undefined,
-	configured: false,
-	mail: undefined,
-	nick: undefined,
-	password: undefined,
-	roles: [],
-	type: 'user'
+	_id: undefined, /* identificatore unico associato all'utente */
+	base64: undefined, /* credenziali dell'utente utilizzate per il login sul DB codificate in 'base64' */
+	configured: false, /* indica se l'utente e' stato configurato */
+	mail: undefined, /* indirizzo email dell'utente */
+	name: undefined, /* username utilizzato dall'utente per l'autenticazione sul DB */
+	nick: undefined, /* nickname arbitrariamente scelto dall'utente */
+	password: undefined, /* password usata dall'utente per l'autenticazione sul DB */
+	roles: [], /* ruoli dell'utente sul DB; deve essere [] */
+	type: 'user' /* tipo dell'utente; deve essere 'user' */
 };
-
-// ----------------------------------------------------------------------------------------------------------------------
-
-// il sottospazio delle opzioni
-georep.options = {};
 /**
- * Memorizza le specifiche per raggiungere un server geocouch.
- * Una volta configurato l'oggetto sara' del tipo:
- * {
- *     proto: "protocollo di comunicazione (http://, https://, ecc...)",
- *     host:   "IP o Hostname della macchina",
- *     port:   "porta sulla quale il server e' in ascolto",
- *     dbname: "nome del db",
- *     admin:  "user name e password dell'admin in base64"
- * }
+ * Controlla se un utente è registrato sul server CouchDB (geocouch).
+ * 
+ * callback ( function(err, data) ):
+ * 		funzione di callback, NON OPZIONALE, chiamata sia in caso di errore che di successo;
+ *         err: oggetto che descrive l'errore, se si è verificato;
+ *        data: true se l'utente è già registrato, false se non lo è .
  */
-georep.options.db = {};
+georep.user.check = function(callback){
+	/* callback è obbligatorio perchè checkUser() chiama $.ajax() che è asincrona */
+	if( arguments.length != 1 || typeof callback != 'function'){
+		throw 'checkUser() richiede un argomento: callback (function(err, data)).';	
+	} else if (!this.isConfigured()){
+		throw 'Impossibile controllare se l\'utente e\' registrato: utente non configurato.';
+	} else if (georep.db.isConfigured()){
+		throw 'Impossibole controllare se l\'utente e\' registrato: server non configurato.';
+	} else {
+		/* richiedo info sul db, usando come credenziali di accesso quelle dell'utente georep.options.user, 
+           se l'accesso al db viene negato, significa che l'utente non è registrato */
+		$.ajax({
+			url: georep.db.proto + georep.db.host + ':' + georep.db.port,
+			type: 'GET',
+			headers: {
+				'Authorization': 'Basic ' + georep.user.base64
+			},
+			success: function(data){
+				/*console.log("Utente gia' registrato "+ data);*/
+				callback(undefined, {isRegistered: true});
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				/*console.log('jqXHR: '+ jqXHR + '\ntextStatus: '+textStatus + '\nerrorThrown: '+errorThrown);*/
+				if (errorThrown == 'Unauthorized') {
+					/*console.log("Utente NON registrato");*/
+					callback(undefined, {isRegistered: false});
+				} else {
+					callback({
+						err: 'Impossibile capire se l\'utente e\' registrato',
+						jqXHR: jqXHR,
+						textStatus: textStatus,
+						errorThrown: errorThrown
+					}, undefined);
+				}
+			}
+		});
+	}
+}
 /**
- * Memorizza le specifiche dell'utente che avra' accesso al db.
- * Una volta configurato l'oggetto sara' del tipo:
- * {
- *     _id:      "org.couchdb.user:nomeUtente",
- *     name:     "nomeUtente",
- *     password: "laPassword",
- *     base64:   "nomeUtente:laPassword in base64",
- *     nick:     "nickname usato dall'utente",
- *     mail:     "email usata dall'utente",
- *     type:     "user",
- *     roles:    []
- * }
+ * controlla se tutte le properties dell'user sono state configurate e ritorna
+ * tale risultato.
  */
-georep.options.user = {};
-
-// il sottospazio dei metodi di configurazione
-georep.config = {};
-
-
-
-
-
-
-
+georep.user.isConfigured = function(){
+	if (this.configured)
+		return true;
+	else {
+		this.configured = (
+			this._id != undefined  && this.base64 != undefined &&
+			this.mail != undefined && this.name != undefined &&
+			this.nick != undefined && this.password != undefined &&
+			this.roles != undefined && this.type != undefined
+		);
+		return this.configured;
+	}
+};
 /**
  * Configura l'utente client.
  * 
@@ -262,97 +284,30 @@ georep.config = {};
  *         nick:     (string) nome arbitrario scelto dall'utente,
  *         mail:     (string) indirizzo e-mail dell'utente
  *     }
- * callback ( function(err, data) ):
- *     funzione di callback chiamata sia in caso di errore che di successo;
- *        err:  oggetto che descrive l'errore, se si e' verificato;
- *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
  */ 
-georep.config.setUser = function(user, callback){
-	if (arguments.length < 1){
-		throw "setUser() richiede almeno 1 argomento: user (object).";
-	} else if (!user || typeof user != "object") {
-		if(callback)
-			callback({
-				err: 'Impossibile settare "user", parametro non valido.',
-				params: {
-					user: user
-				}
-			},undefined);
+georep.user.set = function(user){
+	if (arguments.length != 1){
+		throw 'setUser() richiede un argomento: user (object).';
+	} else if (typeof user != 'object') {
+		throw 'Impossibile settare "user", parametro non valido.';
 	} else if (
-	!user.name      || typeof user.name      != "string" ||
-	!user.password  || typeof user.password  != "string" ||
-	!user.nick      || typeof user.nick      != "string" ||
-	!user.mail      || typeof user.mail      != "string" ){
-		if (callback)
-			callback({
-				err: 'Impossibile settare "user", uno o piu\' properties non valide.',
-				params: {
-					name:     user.name,
-					password: user.password,
-					nick:     user.nick,
-					mail:     user.mail
-				}
-			},undefined);
+	!user.name      || typeof user.name      != 'string' ||
+	!user.password  || typeof user.password  != 'string' ||
+	!user.nick      || typeof user.nick      != 'string' ||
+	!user.mail      || typeof user.mail      != 'string' ){
+		throw 'Impossibile settare "user", uno o piu\' properties non valide.';
 	} else {
-		georep.options.user._id  = "org.couchdb.user:"+user.name;
-		georep.options.user.name = user.name;
-		georep.options.user.password = user.password;
-		georep.options.user.base64 = btoa(user.name+":"+user.password);
-		georep.options.user.nick = user.nick;
-		georep.options.user.mail = user.mail;
-		georep.options.user.type = "user";
-		georep.options.user.roles = [];
-		if(callback)
-			callback(undefined,{
-				user: georep.options.user
-			});
+		georep.user._id  = 'org.couchdb.user:'+user.name;
+		georep.user.name = user.name;
+		georep.user.password = user.password;
+		georep.user.base64 = btoa(user.name+':'+user.password);
+		georep.user.nick = user.nick;
+		georep.user.mail = user.mail;
+		georep.user.type = 'user';
+		georep.user.roles = [];
+		this.isConfigured();
 	}
 };
-
-
-
-
-
-/**
- * Controlla se un utente è registrato sul server CouchDB (geocouch).
- * 
- * callback ( function(err, data) ):
- * 		funzione di callback, NON OPZIONALE, chiamata sia in caso di errore che di successo;
- *         err: oggetto che descrive l'errore, se si è verificato;
- *        data: true se l'utente è già registrato, false se non lo è .
- */
-georep.checkUser = function(callback){
-	/* callback è obbligatorio perchè checkUser() chiama $.ajax() che è asincrona */	
-	if (!callback){
-		throw "checkUser() richiede il paramentro callback OBBLIGATORIO."
-	}
-	else{
-		/* richiedo info sul db, usando come credenziali di accesso quelle dell'utente georep.options.user, 
-           se l'accesso al db viene negato, significa che l'utente non è registrato */
-		$.ajax({
-			url: georep.options.db.proto+georep.options.db.host+':'+georep.options.db.port,
-			type: 'GET',
-			headers: {
-				'Authorization': 'Basic '+georep.options.user.base64
-			},
-			success: function(data){
-				/*console.log("Utente gia' registrato "+ data);*/
-				callback(undefined, {isRegistered: true});
-			},
-			error: function(jqXHR, textStatus, errorThrown){
-				/*console.log('jqXHR: '+ jqXHR + '\ntextStatus: '+textStatus + '\nerrorThrown: '+errorThrown);*/
-				if (errorThrown == 'Unauthorized'){
-					/*console.log("Utente NON registrato");*/
-					callback(undefined, {isRegistered: false});
-				}
-				else{
-					callback({err: "Impossibile capire se l'utente e' registrato", jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
-				}
-			},			
-		});
-	}
-}
-
 /**
  * Registra l'utente sul server CouchDB(questa funzione dovrà essere fatta poi dal server direttamente)
  *
@@ -361,27 +316,38 @@ georep.checkUser = function(callback){
  *        err:  oggetto che descrive l'errore, se si e' verificato;
  *        data: oggetto che mostra il messaggio ricevuto se non si sono verificati errori.
  */
- 
-georep.signup = function(callback){
-	var usr = georep.options.user;
-	$.ajax({
-		url: georep.options.db.proto+georep.options.db.host+':'+georep.options.db.port+'/_users/'+usr._id,
-		type: 'PUT',
-		data: JSON.stringify({name: usr.name, password: usr.password, nick: usr.nick, mail: usr.mail, type: usr.type, roles: usr.roles}),
-		headers: {
-			'Authorization': 'Basic '+georep.options.db.admin
-		},
-		success: function(data){
-			console.log("Utente registrato con successo! " +data);
-			if (callback) {
-				callback(undefined, data);
+georep.user.signup = function(callback){
+	if( arguments.length == 1 && typeof callback != 'function' ) {
+		throw 'Il parametro opzionale deve essere una funzione';
+	} else {
+		$.ajax({
+			url: georep.db.proto + georep.db.host + ':' +
+				 georep.db.port + '/_users/' + georep.user._id,
+			type: 'PUT',
+			data: JSON.stringify({
+				name: georep.user.name,
+				password: georep.user.password,
+				nick: georep.user.nick,
+				mail: georep.user.mail,
+				type: georep.user.type,
+				roles: georep.user.roles
+			}),
+			headers: {
+				'Authorization': 'Basic ' + georep.db.admin.base64
+			},
+			success: function(data){
+				/*console.log("Utente registrato con successo! " +data);*/
+				if (callback) {
+					callback(undefined, data);
+				}
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				/*console.log("Utente NON registrato! " + jqXHR + textStatus + errorThrown);*/
+				if (callback){
+					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
+				}
 			}
-		},
-		error: function(jqXHR, textStatus, errorThrown){
-			console.log("Utente NON registrato! " + jqXHR + textStatus + errorThrown);
-			if (callback){
-				callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
-			}
-		}
-	});	
+		});
+	}
 }
+

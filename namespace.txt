@@ -43,7 +43,8 @@ alle query.
     ├─ roles       ruoli dell'utente sul DB; deve essere []
     ├─ type        tipo dell'utente; deve essere 'user'
     │
-    ├─ checkUser()
-    ├─ setUser()
+    ├─ check()
+    ├─ isConfigured()
+    ├─ set()
     └─ signup()
 
