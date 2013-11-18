@@ -1,6 +1,218 @@
 // Spazio dei nomi
 var georep = {};
 
+// sezione relativa a costanti utilizzate nel resto del codice
+georep.constants = {};
+
+// sezione relativa al database remoto
+georep.db = {
+	admin: {
+		base64: undefined,
+		configured: false
+	},
+	configured: false,
+	name: undefined,
+	host: undefined,
+	port: undefined,
+	proto: undefined
+};
+/**
+ * controlla se tutte le properties del DB sono state configurate e ritorna
+ * tale risultate.
+ */
+georep.db.isConfigured = function(){
+	if (this.configured)
+		return true;
+	else {
+		this.configured = (
+			this.admin.configured == true &&
+			this.name  !=  undefined && this.host  != undefined &&
+			this.port  !=  undefined && this.proto != undefined
+		);
+		return this.configured;
+	}
+};
+
+/**
+ * Setta l'utente amministratore del server.
+ *
+ * name ( string ):
+ * passwd: ( string ):
+ */
+georep.db.setAdmin = function(name, passwd){
+	if (arguments.length != 2) {
+		throw 'setAdmin() richiede esattamente 2 argomenti: name (string), passwd (string).';
+	} else if (!name || !passwd || typeof name != 'string' || typeof passwd != 'string') {
+		throw 'Impossibile settare l\'amministratore, parametri non validi.';
+	} else {
+		georep.db.admin.base64 = btoa(name+':'+passwd);
+		georep.db.admin.configured = true;
+		georep.db.isConfigured();
+	}
+};
+/**
+ * Setta il nome del database all'interno del server.
+ *
+ * DBName ( string ):
+ */
+georep.db.setDBName = function(DBName){
+	if (arguments.length != 1) {
+		throw 'setDBName() richiede un argomento: DBName (string).';
+	} else if (!DBName || typeof DBName != 'string' ) {
+		throw 'Impossibile settare il nome del database, parametro non valido.';
+	} else {
+		georep.db.name = DBName;
+		georep.db.isConfigured();
+	}
+};
+/**
+ * Configura lo URL del server CouchDB (geocouch)
+ *
+ * URLServer ( object ):
+ *     {
+ *         proto: "http://",
+ *         host:  "127.0.0.1",
+ *         port:  5984
+ *     }
+ */
+georep.db.setURLServer = function(URLServer){
+	if (arguments.length != 1){
+		throw 'setURLServer() richiede un argomento: URLServer (object).';
+	} else if (typeof URLServer != 'object'){
+		throw 'Impossibile settare "URLServer", parametro non valido.';
+	} else if (
+	!URLServer.proto || typeof URLServer.proto != 'string' ||
+	!URLServer.host  || typeof URLServer.host  != 'string' ||
+	!URLServer.port  || typeof URLServer.port  != 'number' ||
+	URLServer.port < 1 || URLServer.port > 65535){
+		throw 'Impossibile settare "URLServer", uno o piu\' properties non valide.';
+	} else {
+		georep.db.proto = URLServer.proto;
+		georep.db.host = URLServer.host;
+		georep.db.port = URLServer.port;
+		georep.db.isConfigured();
+	}
+};
+/**
+ * Recupera un doc dal database tramite il relativo ID
+ * 
+ * docId: (string) "l'ID del documento",
+ * attachments: (boolean)
+ *     true  - recupera il documento completo di allegato;
+ *     false - recupera il semplice documento senza allegato.
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
+ */ 
+georep.db.getDoc = function(docId, attachments, callback){
+	if( arguments.length < 2 )
+		throw 'getDoc() richiede almeno 2 argomenti: docId (string), attachment (boolean).';
+	else if (!docId || typeof docId != 'string' || typeof attachments != 'boolean')
+		throw 'Uno o piu\' parametri non validi.'
+	else {
+		var attach = (attachments)?'?attachments=true':'?attachments=false';
+		$.ajax({
+			url: georep.db.proto +
+			     georep.db.host + ':' +
+			     georep.db.port + '/' +
+			     georep.db.name + '/' + docId +
+			     attach,
+			headers: {
+				Authorization: 'Basic ' + georep.user.base64,
+				/* mi assicura che la risposta arrivi con l'allegato in base64
+                   invece che in binario in un oggetto MIME a contenuti multipli
+                */ 
+				Accept: 'application/json'	
+			},
+			success: function(data){
+				if(callback)
+					callback(undefined,data);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				if(callback)
+					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
+			}
+		});
+	}
+};
+/**
+ * Invia un nuovo documento sul database remoto
+ * 
+ * doc (object) :
+ *     {
+ *         title: (string) "titolo del documento",
+ *         msg: (string) "qualche dettaglio in piu'",
+ *         img: (object) {
+ *                           content_type: "image/...",
+ *                           data: "... data in base64 ..."
+ *                       }
+ *         loc: (object) {
+ *                           latitude:  (number) latitudine nord,
+ *                           longitude: (number) longitudine est
+ *                       }
+ *     }
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
+ */ 
+georep.db.postDoc = function(doc,callback){
+	if( arguments.length < 1 )
+		throw 'postDoc() richiede almeno 1 argomento: doc (object).';
+	else if ( typeof doc != 'object' ||
+	!doc.title || typeof doc.title != 'string' ||
+	!doc.msg   || typeof doc.msg   != 'string' ||
+	!doc.img   || typeof doc.img   != 'object' ||
+	!doc.img.content_type || typeof doc.img.content_type != 'string' ||
+	!doc.img.data         || typeof doc.img.data         != 'string' ||
+	!doc.loc || typeof doc.loc != 'object' ||
+	!doc.loc.latitude  || typeof doc.loc.latitude  != 'number' || doc.loc.latitude  >  90 || doc.loc.latitude  <  -90 ||
+	!doc.loc.longitude || typeof doc.loc.longitude != 'number' || doc.loc.longitude > 180 || doc.loc.longitude < -180 ){
+		throw 'Parametro "doc" non valido.'
+	} else {
+		var newDoc = {};
+		newDoc.user = georep.user._id;
+		newDoc.title = doc.title;
+		newDoc.msg = doc.msg;
+		newDoc.loc = doc.loc;
+		newDoc._attachments = {
+			img: doc.img
+		};
+		$.ajax({
+			url: georep.db.proto + georep.db.host + ':' +
+			     georep.db.port + '/' + georep.db.name,
+			type: 'POST',
+			dataType: 'json',
+			contentType: 'application/json',
+			data: JSON.stringify(newDoc),
+			headers: {Authorization: 'Basic ' + georep.user.base64},
+			success: function(data){
+				if(callback)
+					callback(undefined,data);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				if(callback)
+					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
+			}
+		});
+	}
+};
+
+// sezione relativa all'utente che utilizza il DB
+georep.user = {
+	_id: undefined,
+	base64: undefined,
+	configured: false,
+	mail: undefined,
+	nick: undefined,
+	password: undefined,
+	roles: [],
+	type: 'user'
+};
+
+// ----------------------------------------------------------------------------------------------------------------------
+
 // il sottospazio delle opzioni
 georep.options = {};
 /**
@@ -34,93 +246,11 @@ georep.options.user = {};
 // il sottospazio dei metodi di configurazione
 georep.config = {};
 
-/**
- * Setta l'utente amministratore del  server.
- *
- * name ( string ):
- * passwd: ( string ):
- * callback ( function(err, data) ):
- */
-georep.config.setAdmin = function(name, passwd, callback){
-	if (arguments.length < 2) {
-		throw "setAdmin() richiede almeno 2 argomenti: name (string), passwd (string).";
-	} else if (!name || !passwd || typeof name != "string" || typeof passwd != "string") {
-		if (callback) callback({err: 'Impossibile settare "admin", parametri non validi.',params: {name: name, passwd: passwd}}, undefined);
-	} else {
-		georep.options.db.admin = btoa(name+":"+passwd);
-		if (callback) callback(undefined,{admin: georep.options.db.admin});
-	}
-};
 
-/**
- * Setta il nome del database all'interno del server.
- *
- * DBName ( string ):
- * callback ( function(err, data) ):
- */
-georep.config.setDBName = function(DBName, callback){
-	if (arguments.length < 1) {
-		throw "setDBName() richiede almeno 1 argomenti: DBName (string).";
-	} else if (!DBName || typeof DBName != "string" ) {
-		if (callback) callback({err: 'Impossibile settare "dbname", parametro non valido.', params: {DBName: DBName}},undefined);
-	} else {
-		georep.options.db.dbname = DBName;
-		if (callback) callback(undefined, {dbname: georep.options.db.dbname});
-	}
-};
 
-/**
- * Configura lo URL del server CouchDB (geocouch)
- *
- * URLServer ( object ):
- *     {
- *         proto: "http://",
- *         host:  "127.0.0.1",
- *         port:  "5984"
- *     }
- * callback ( function(err, data) ):
- *     funzione di callback chiamata sia in caso di errore che di successo;
- *        err:  oggetto che descrive l'errore, se si e' verificato;
- *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
- */
-georep.config.setURLServer = function(URLServer, callback){
-	if (arguments.length < 1){
-		throw "setURLServer() richiede almeno 1 argomento: URLServer (object).";
-	}
-	else if (!URLServer || typeof URLServer != "object"){
-		if(callback)
-			callback({
-				err: 'Impossibile settare "URLServer", parametro non valido.',
-				params: {
-					URLServer: URLServer
-				}
-			},undefined);
-	}
-	else if (
-	!URLServer.proto || typeof URLServer.proto != "string" ||
-	!URLServer.host  || typeof URLServer.host  != "string" ||
-	!URLServer.port  || typeof URLServer.port  != "string" ){
-		if (callback)
-			callback({
-				err: 'Impossibile settare "URLServer", uno o piu\' properties non valide.',
-				params: {
-					proto: URLServer.proto,
-					host: URLServer.host,
-					port: URLServer.port
-				}
-			},undefined);
-	} else {
-		georep.options.db.proto = URLServer.proto;
-		georep.options.db.host = URLServer.host;
-		georep.options.db.port = URLServer.port;
-		if( callback )
-			callback(undefined, {
-				proto: georep.options.db.proto,
-				host: georep.options.db.host,
-				port: georep.options.db.port
-			});
-	}
-};
+
+
+
 
 /**
  * Configura l'utente client.
@@ -179,114 +309,9 @@ georep.config.setUser = function(user, callback){
 	}
 };
 
-/**
- * Recupera un doc dal database tramite il relativo ID
- * 
- * docId: (string) "l'ID del documento",
- * attachments: (boolean)
- *     true  - recupera il documento completo di allegato;
- *     false - recupera il semplice documento senza allegato.
- * callback ( function(err, data) ):
- *     funzione di callback chiamata sia in caso di errore che di successo;
- *        err:  oggetto che descrive l'errore, se si e' verificato;
- *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
- */ 
-georep.getDoc = function(docId, attachments, callback){
-	if( arguments.length < 2 )
-		throw "getDoc() richiede almeno 2 argomenti: docId (string), attachment (boolean).";
-	else if (!docId || typeof docId != "string" || typeof attachments != "boolean")
-		throw 'Uno o piu\' parametri non validi.'
-	else {
-		var attach = (attachments)?"?attachments=true":"?attachments=false";
-		$.ajax({
-			url: georep.options.db.proto +
-			     georep.options.db.host + ':' +
-			     georep.options.db.port + '/' +
-			     georep.options.db.dbname + '/' + docId +
-			     attach,
-			headers: {
-				Authorization: 'Basic ' + georep.options.user.base64,
-				/* mi assicura che la risposta arrivi con l'allegato in base64
-                   invece che in binario in un oggetto MIME a contenuti multipli
-                */ 
-				Accept: 'application/json'	
-			},
-			success: function(data){
-				if(callback)
-					callback(undefined,data);
-			},
-			error: function(jqXHR, textStatus, errorThrown){
-				if(callback)
-					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
-			}
-		});
-	}
-};
 
-/**
- * Invia un nuovo documento sul database remoto
- * 
- * doc (object) :
- *     {
- *         title: (string) "titolo del documento",
- *         msg: (string) "qualche dettaglio in piu'",
- *         img: (object) {
- *                           content_type: "image/...",
- *                           data: "... data in base64 ..."
- *                       }
- *         loc: (object) {
- *                           latitude:  (number) latitudine nord,
- *                           longitude: (number) longitudine est
- *                       }
- *     }
- * callback ( function(err, data) ):
- *     funzione di callback chiamata sia in caso di errore che di successo;
- *        err:  oggetto che descrive l'errore, se si e' verificato;
- *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
- */ 
-georep.postDoc = function(doc,callback){
-	if( arguments.length < 1 )
-		throw "postDoc() richiede almeno 1 argomento: doc (object).";
-	else if ( typeof doc != "object" ||
-	!doc.title || typeof doc.title != "string" ||
-	!doc.msg   || typeof doc.msg   != "string" ||
-	!doc.img   || typeof doc.img   != "object" ||
-	!doc.img.content_type || typeof doc.img.content_type != "string" ||
-	!doc.img.data         || typeof doc.img.data         != "string" ||
-	!doc.loc || typeof doc.loc != "object" ||
-	!doc.loc.latitude  || typeof doc.loc.latitude  != "number" || doc.loc.latitude  >  90 || doc.loc.latitude  <  -90 ||
-	!doc.loc.longitude || typeof doc.loc.longitude != "number" || doc.loc.longitude > 180 || doc.loc.longitude < -180 ){
-		throw 'Parametro "doc" non valido.'
-	} else {
-		var newDoc = {};
-		newDoc.user = georep.options.user._id;
-		newDoc.title = doc.title;
-		newDoc.msg = doc.msg;
-		newDoc.loc = doc.loc;
-		newDoc._attachments = {
-			img: doc.img
-		};
-		$.ajax({
-			url: georep.options.db.proto +
-			     georep.options.db.host + ':' +
-			     georep.options.db.port + '/' +
-			     georep.options.db.dbname,
-			type: 'POST',
-			dataType: 'json',
-			contentType: 'application/json',
-			data: JSON.stringify(newDoc),
-			headers: {Authorization: 'Basic ' + georep.options.user.base64},
-			success: function(data){
-				if(callback)
-					callback(undefined,data);
-			},
-			error: function(jqXHR, textStatus, errorThrown){
-				if(callback)
-					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
-			}
-		});
-	}
-};
+
+
 
 /**
  * Controlla se un utente è registrato sul server CouchDB (geocouch).
