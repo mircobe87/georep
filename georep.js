@@ -180,6 +180,50 @@ georep.config.setUser = function(user, callback){
 };
 
 /**
+ * Recupera un doc dal database tramite il relativo ID
+ * 
+ * docId: (string) "l'ID del documento",
+ * attachments: (boolean)
+ *     true  - recupera il documento completo di allegato;
+ *     false - recupera il semplice documento senza allegato.
+ * callback ( function(err, data) ):
+ *     funzione di callback chiamata sia in caso di errore che di successo;
+ *        err:  oggetto che descrive l'errore, se si e' verificato;
+ *        data: oggetto che mostra le opzioni settate se non si sono verificati errori.
+ */ 
+georep.getDoc = function(docId, attachments, callback){
+	if( arguments.length < 2 )
+		throw "getDoc() richiede almeno 2 argomenti: docId (string), attachment (boolean).";
+	else if (!docId || typeof docId != "string" || typeof attachments != "boolean")
+		throw 'Uno o piu\' parametri non validi.'
+	else {
+		var attach = (attachments)?"?attachments=true":"?attachments=false";
+		$.ajax({
+			url: georep.options.db.proto +
+			     georep.options.db.host + ':' +
+			     georep.options.db.port + '/' +
+			     georep.options.db.dbname + '/' + docId +
+			     attach,
+			headers: {
+				Authorization: 'Basic ' + georep.options.user.base64,
+				/* mi assicura che la risposta arrivi con l'allegato in base64
+                   invece che in binario in un oggetto MIME a contenuti multipli
+                */ 
+				Accept: 'application/json'	
+			},
+			success: function(data){
+				if(callback)
+					callback(undefined,data);
+			},
+			error: function(jqXHR, textStatus, errorThrown){
+				if(callback)
+					callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
+			}
+		});
+	}
+};
+
+/**
  * Invia un nuovo documento sul database remoto
  * 
  * doc (object) :
@@ -220,14 +264,16 @@ georep.postDoc = function(doc,callback){
 		newDoc.msg = doc.msg;
 		newDoc.loc = doc.loc;
 		newDoc._attachments = {
-			img: doc.img;
+			img: doc.img
 		};
 		$.ajax({
 			url: georep.options.db.proto +
 			     georep.options.db.host + ':' +
 			     georep.options.db.port + '/' +
 			     georep.options.db.dbname,
+			type: 'POST',
 			dataType: 'json',
+			contentType: 'application/json',
 			data: JSON.stringify(newDoc),
 			headers: {Authorization: 'Basic ' + georep.options.user.base64},
 			success: function(data){
