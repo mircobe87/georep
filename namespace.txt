@@ -6,6 +6,8 @@ alle query.
  georep (radice)
  │
  ├─ constants (sezione relativa a costanti utilizzate nel resto del codice)
+ │  │
+ │  └─ designDocs (vettore* contenente l'elenco dei designDoc usati)
  │
  ├─ db (sezione relativa al database remoto)
  │  │
@@ -27,8 +29,8 @@ alle query.
  │  ├─ setURLServer()
  │  │
  │  ├─ getDoc()
- │  ├─ postDoc() 
- │  └─ 
+ │  ├─ getUserDocs() 
+ │  └─ postDoc()
  │
  └─ user (sezione relativa all'utente che utilizza il DB)
     │
@@ -47,4 +49,13 @@ alle query.
     ├─ isConfigured()
     ├─ set()
     └─ signup()
+
+
+*) designDocs è un vettore di oggetti strutturati in questo modo
+    {
+    	name: "nome del documento"     /* nome di questo design document */
+    	views ["view1", "view2", ... ] /* vettore delle views presenti in questo
+    	                                  design document */
+    }
+
 

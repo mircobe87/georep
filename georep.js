@@ -1,7 +1,13 @@
 // Spazio dei nomi
 var georep = {
 	// sezione relativa a costanti utilizzate nel resto del codice
-	constants: {},
+	constants: {
+		/* vettore contenente l'elenco dei designDoc usati */
+		designDocs: [{
+			name: 'queries', /* nome di questo design document */
+			views:['allDocsByUser','allDocsByLoc'] /* elenco delle views */
+		}]
+	},
 	// sezione relativa al database remoto
 	db: {
 		admin: {
@@ -133,6 +139,49 @@ var georep = {
 			}
 		},
 		/**
+		 * Chiede al DB tutti gli ID dei documenti creati da un utente.
+		 *
+		 * userId (string): identificatore unico di un utente.
+		 * callback ( function(err, data) ): funzione chiamata al termine della
+		 *     richiesta al server. In caso di errore, 'err' contiene un oggetto
+		 *     che descrive l'errore altrimenti 'data' contiene il risultato
+		 *     della query.
+		 */
+		getUserDocs: function(userId, callback){
+			var dDoc = georep.constants.designDocs[0].name;
+			var view = georep.constants.designDocs[0].views[0];
+			
+			if (arguments.length < 1)
+				throw 'getUserDocs() richiede almeno un argomento: userId (string).';
+			else if (!userId || typeof userId != 'string')
+				throw 'parametro non valido: userId deve essere una stringa non vuota.';
+			else if (arguments.length > 1 && typeof callback != 'function')
+				throw 'parametro opzionale non valido: callback deve essere una funzione.';
+			else if (!georep.db.isConfigured())
+				throw 'Impossibile contattare il database: db non cofigurato';
+			else if (!georep.user.isConfigured())
+				throw 'Impossibile inviare la richiesta al server da un utente non configurato.';
+			else {
+				$.ajax({
+					url: georep.db.proto + georep.db.host + ':' + georep.db.port + '/' +
+						 georep.db.name + '/_design/' + dDoc + '/_view/' + view + '?key="' + userId + '"',
+					type: 'GET',
+					headers: {
+						Accept: 'application/json',
+						Authorization: 'Basic ' + georep.user.base64
+					},
+					success: function(data){
+						if(callback)
+							callback(data, undefined);
+					},
+					error: function(jqXHR, textStatus, errorThrown){
+						if(callback)
+							callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown},undefined);
+					}
+				});
+			}
+		},
+		/**
 		 * Invia un nuovo documento sul database remoto
 		 * 
 		 * doc (object) :
@@ -220,7 +269,7 @@ var georep = {
 				throw 'checkUser() richiede un argomento: callback (function(err, data)).';	
 			} else if (!this.isConfigured()){
 				throw 'Impossibile controllare se l\'utente e\' registrato: utente non configurato.';
-			} else if (georep.db.isConfigured()){
+			} else if (!georep.db.isConfigured()){
 				throw 'Impossibole controllare se l\'utente e\' registrato: server non configurato.';
 			} else {
 				/* richiedo info sul db, usando come credenziali di accesso quelle dell'utente georep.options.user, 
