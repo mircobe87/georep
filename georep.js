@@ -159,9 +159,9 @@ var georep = {
 		 *     della query.
 		 */
 		getUserDocs: function(userId, callback){
-			var dDoc = georep.constants.designDocs[0].name;
-			var view = georep.constants.designDocs[0].views[0];
-			
+			var viewPath = georep.constants.designDocs[0].name + '/' +
+			               georep.constants.designDocs[0].handlers[0].name + '/' +
+			               georep.constants.designDocs[0].handlers[0].views[0];
 			if (arguments.length < 1)
 				throw 'getUserDocs() richiede almeno un argomento: userId (string).';
 			else if (!userId || typeof userId != 'string')
@@ -175,7 +175,7 @@ var georep = {
 			else {
 				$.ajax({
 					url: georep.db.proto + georep.db.host + ':' + georep.db.port + '/' +
-						 georep.db.name + '/_design/' + dDoc + '/_view/' + view + '?key="' + userId + '"',
+						 georep.db.name + '/_design/' + viewPath + '?key="' + userId + '"',
 					type: 'GET',
 					headers: {
 						Accept: 'application/json',
@@ -183,7 +183,7 @@ var georep = {
 					},
 					success: function(data){
 						if(callback)
-							callback(data, undefined);
+							callback(undefined, data);
 					},
 					error: function(jqXHR, textStatus, errorThrown){
 						if(callback)
