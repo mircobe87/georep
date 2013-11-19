@@ -53,9 +53,14 @@ alle query.
 
 *) designDocs è un vettore di oggetti strutturati in questo modo
     {
-    	name: "nome del documento"     /* nome di questo design document */
-    	views ["view1", "view2", ... ] /* vettore delle views presenti in questo
-    	                                  design document */
+    	name: "nome del documento"     /* nome di questo design document  */
+    	handlers: ["h1", "h2", ... ]   /* vettore dei gestori delle views */
+    }
+    
+    un gestore e' un oggetto di questo tipo:
+    {
+    	name: "nome del gestore",      /* nome di questo handler */
+    	views: ["view1", "view2", ...] /* nomi delle views gestite da questo handler */
     }
 
 

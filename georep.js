@@ -3,10 +3,21 @@ var georep = {
 	// sezione relativa a costanti utilizzate nel resto del codice
 	constants: {
 		/* vettore contenente l'elenco dei designDoc usati */
-		designDocs: [{
-			name: 'queries', /* nome di questo design document */
-			views:['allDocsByUser','allDocsByLoc'] /* elenco delle views */
-		}]
+		designDocs: [
+			{
+				name: 'queries', /* nome di questo design document */
+				handlers: [ /* vettore dei gestori delle diverse views */
+					{
+						name: '_view', /* gestore delle views map-reduce */
+						views: ['allDocsByUser'] /* elenco delle views gestite da questo gestore */
+					},
+					{
+						name: '_spatial', /* gestore delle views spaziali di geocouch */
+						views: ['allDocsByLoc'] /* elenco delle views spaziali */
+					}
+				]
+			}
+		]
 	},
 	// sezione relativa al database remoto
 	db: {
