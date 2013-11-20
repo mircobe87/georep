@@ -122,7 +122,7 @@ var georep = {
 			if( arguments.length < 2 )
 				throw 'getDoc() richiede almeno 2 argomenti: docId (string), attachment (boolean).';
 			else if (!docId || typeof docId != 'string' || typeof attachments != 'boolean')
-				throw 'Uno o piu\' parametri non validi.'
+				throw 'Uno o piu\' parametri non validi.';
 			else {
 				var attach = (attachments)?'?attachments=true':'?attachments=false';
 				$.ajax({
@@ -189,7 +189,7 @@ var georep = {
 			!tr_corner.lat || typeof tr_corner.lat != 'number'|| tr_corner.lat <  -90 || tr_corner.lat >  90  )
 				throw 'Parametro non valido: tr_corner.';
 			else if (arguments.length > 2 && (!callback || typeof callback != 'function'))
-				throw 'Parametro opzionale non valido: callback.'
+				throw 'Parametro opzionale non valido: callback.';
 			else if (!georep.db.isConfigured())
 				throw 'Impossibile contattare il database: db non cofigurato';
 			else if (!georep.user.isConfigured())
@@ -292,7 +292,7 @@ var georep = {
 			!doc.loc || typeof doc.loc != 'object' ||
 			!doc.loc.latitude  || typeof doc.loc.latitude  != 'number' || doc.loc.latitude  >  90 || doc.loc.latitude  <  -90 ||
 			!doc.loc.longitude || typeof doc.loc.longitude != 'number' || doc.loc.longitude > 180 || doc.loc.longitude < -180 ){
-				throw 'Parametro "doc" non valido.'
+				throw 'Parametro "doc" non valido.';
 			} else {
 				var newDoc = {};
 				newDoc.user = georep.user._id;
@@ -473,19 +473,5 @@ var georep = {
 			}
 		}
 	}
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+};
 
