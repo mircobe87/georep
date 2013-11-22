@@ -295,7 +295,8 @@ var georep = {
 				throw 'Parametro "doc" non valido.';
 			} else {
 				var newDoc = {};
-				newDoc.user = georep.user._id;
+				newDoc.userNick = georep.user.nick;
+				newDoc.userMail = georep.user.mail;
 				newDoc.title = doc.title;
 				newDoc.msg = doc.msg;
 				newDoc.loc = doc.loc;
