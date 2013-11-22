@@ -545,21 +545,13 @@ var georep = {
 			} else if (!georep.db.isConfigured()) {
 					throw 'Impossibile contattare il database: server non configurato.';
 			} else {
-				$.ajax({
-					url: georep.db.proto + georep.db.host + ':' +
-						 georep.db.port + '/_users/' + georep.user._id,
-					headers: {
-						Accept: 'application/json',
-						Authorization: 'Basic ' + georep.user.base64
-					},
-					dataType: 'json',
-					success: function(data){
-						console.log(data);
+				this.getRemote(function(err,data){
+					if(!err){
 						var rev = data._rev;
 						$.ajax({
 							url: georep.db.proto + georep.db.host + ':' +
-						         georep.db.port + '/_users/' + georep.user._id +
-						         '?rev=' + rev,
+								 georep.db.port + '/_users/' + georep.user._id +
+								 '?rev=' + rev,
 							type: 'PUT',
 							headers: {
 								Authorization: 'Basic ' + georep.user.base64
@@ -588,10 +580,9 @@ var georep = {
 								}
 							}
 						});
-					},
-					error: function(jqXHR, textStatus, errorThrown){
+					}else{
 						if (callback){
-							callback({jqXHR: jqXHR, textStatus: textStatus, errorThrown: errorThrown}, undefined);
+							callback(err, undefined);
 						}
 					}
 				});
