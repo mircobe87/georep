@@ -1,0 +1,50 @@
+Sviluppo di CommonJS Module per permettere la comunicazione di una app Alloy Titanium
+con un server CouchDB esteso con Geocouch.
+
+Il modulo avra' dipendenze in Titanium SDK.
+
+Il modulo definisce 4 oggetti differenti:
+ - Admin : che rappresenta l'amministratore del server remoto;
+ - User  : che rappresenta l'utente standard che utilizza il servizio;
+ - DB    : che rappresenta il database remoto;
+ - Georep: che rappresenta l'interfaccia di accesso al servizio remoto.
+
+
+ 
+Esempio d'uso
+=============
+
+Una volta importato il modulo
+
+	01 |  val georep = require('georep');
+
+si definisce il database con il quale vogliamo operare
+
+	02 |  var remoteDb = new georep.DB({
+	03 |      name: 'testdb',
+	04 |      proto: 'http',
+	05 |      host: '192.168.0.5',
+	06 |      port: 5984,
+	07 |      admin: new georep.Admin({
+	08 |          name: 'admin',
+	09 |          password: 'root'
+	10 |      });
+	11 |  });
+	
+si definisce l'utente che utilizzera' il database remoto
+
+	12 |  var localUser = new georep.User({
+	13 |      name: 'username',
+	14 |      password: 'secret',
+	15 |      nick: 'MyNickName',
+	16 |      mail: 'my@mail.com'
+	17 |  });
+	
+si configura un nuovo servizio:
+
+	18 |  var service = new georep.Georep({
+	19 |      db: remoteDb,
+	20 |      user: localUser
+	21 |  });
+
+
