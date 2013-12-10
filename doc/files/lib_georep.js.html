@@ -1,0 +1,1109 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <title>lib/georep.js</title>
+    <link rel="stylesheet" href="http://yui.yahooapis.com/3.9.1/build/cssgrids/cssgrids-min.css">
+    <link rel="stylesheet" href="../assets/vendor/prettify/prettify-min.css">
+    <link rel="stylesheet" href="../assets/css/main.css" id="site_styles">
+    <link rel="shortcut icon" type="image/png" href="../assets/favicon.png">
+    <script src="http://yui.yahooapis.com/combo?3.9.1/build/yui/yui-min.js"></script>
+</head>
+<body class="yui3-skin-sam">
+
+<div id="doc">
+    <div id="hd" class="yui3-g header">
+        <div class="yui3-u-3-4">
+            
+                <h1><img src="../assets/css/logo.png" title=""></h1>
+            
+        </div>
+        <div class="yui3-u-1-4 version">
+            <em>API Docs for: </em>
+        </div>
+    </div>
+    <div id="bd" class="yui3-g">
+
+        <div class="yui3-u-1-4">
+            <div id="docs-sidebar" class="sidebar apidocs">
+                <div id="api-list">
+    <h2 class="off-left">APIs</h2>
+    <div id="api-tabview" class="tabview">
+        <ul class="tabs">
+            <li><a href="#api-classes">Classes</a></li>
+            <li><a href="#api-modules">Modules</a></li>
+        </ul>
+
+        <div id="api-tabview-filter">
+            <input type="search" id="api-filter" placeholder="Type to filter APIs">
+        </div>
+
+        <div id="api-tabview-panel">
+            <ul id="api-classes" class="apis classes">
+            
+                <li><a href="../classes/Admin.html">Admin</a></li>
+            
+                <li><a href="../classes/DB.html">DB</a></li>
+            
+                <li><a href="../classes/Georep.html">Georep</a></li>
+            
+                <li><a href="../classes/User.html">User</a></li>
+            
+            </ul>
+
+            <ul id="api-modules" class="apis modules">
+            
+                <li><a href="../modules/georep.html">georep</a></li>
+            
+            </ul>
+        </div>
+    </div>
+</div>
+
+            </div>
+        </div>
+        <div class="yui3-u-3-4">
+                <div id="api-options">
+        Show:
+        <label for="api-show-inherited">
+            <input type="checkbox" id="api-show-inherited" checked>
+            Inherited
+        </label>
+
+        <label for="api-show-protected">
+            <input type="checkbox" id="api-show-protected">
+            Protected
+        </label>
+
+        <label for="api-show-private">
+            <input type="checkbox" id="api-show-private">
+            Private
+        </label>
+        <label for="api-show-deprecated">
+            <input type="checkbox" id="api-show-deprecated">
+            Deprecated
+        </label>
+
+    </div>
+
+
+            <div class="apidocs">
+                <div id="docs-main">
+                    <div class="content">
+                        <h1 class="file-heading">File: lib/georep.js</h1>
+
+<div class="file">
+    <pre class="code prettyprint linenums">
+/**
+&lt;p&gt;Fornisce gli oggetti per poter utilizzare un db remoto couchdb esteso con geocouch.&lt;/p&gt;
+&lt;p&gt;
+	Sul database è possibile immagazzinare record geo-referenziati che contengono le
+	seguenti informazioni:
+	&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;title&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;:
+			Titolo per la segnalazione.
+		&lt;/li&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;msg&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;:
+			Descrizione più dettagliata per la segnalazione.
+		&lt;/li&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;img&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;object&lt;/i&gt;:
+			Immagine allegata per documentare la segnalazione.
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;&lt;code&gt;content_type&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;:
+					Tipo di contenuto, per esempio &lt;code&gt;&quot;image/jpg&quot;&lt;/code&gt;.
+				&lt;/li&gt;
+				&lt;li&gt;&lt;b&gt;&lt;code&gt;data&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;:
+					Codifica &lt;code&gt;base64&lt;/code&gt; del documento allegato.
+				&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/li&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;loc&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;object&lt;/i&gt;:
+			Posizione geografica della segnalazione.
+			&lt;ul&gt;
+				&lt;li&gt;&lt;b&gt;&lt;code&gt;latitude&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;number&lt;/i&gt;:
+					Latitudine Nord.
+				&lt;/li&gt;
+				&lt;li&gt;&lt;b&gt;&lt;code&gt;longitude&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;number&lt;/i&gt;:
+					Longitudine Est.
+				&lt;/li&gt;
+			&lt;/ul&gt;
+		&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/p&gt;
+
+@module georep
+**/
+
+
+// -- USER ---------------------------------------------------------------------
+
+/**
+&lt;h3&gt;User&lt;/h3&gt;
+&lt;p&gt;
+	Definisce l&#x27;utente locale che utilizzerà il database remoto.&lt;br&gt;
+	Tutte le segnalazioni creare e inviate al server saranno associate a questo utente.
+&lt;/p&gt;
+&lt;p&gt;
+	Ogni utente è identificato sul server da una coppia &lt;i&gt;username&lt;/i&gt; e &lt;i&gt;password&lt;/i&gt;
+	ed è personalizzato da un &lt;i&gt;nickname&lt;/i&gt; e da un contatto &lt;i&gt;e-mail&lt;/i&gt; visibili
+	agli altri utenti.
+&lt;/p&gt;
+&lt;p&gt;
+	Per istanziare un nuovo utente bisogna definire prima un oggetto &lt;b&gt;&lt;code&gt;userConf&lt;/code&gt;&lt;/b&gt;
+	che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+	&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;name&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: user name utilizzato per il login
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;password&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: password utilizzata per il login
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;nick&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: nome personalizzato per l&#x27;utente
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;mail&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: contatto e-mail dell&#x27;utente
+	&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3&gt;Esempio:&lt;/h3&gt;
+
+	var userConf = {
+		name: &quot;username&quot;,
+		password: &quot;1234&quot;,
+		nick: &quot;userNick&quot;,
+		mail: &quot;myemail@mail.com&quot;
+	};
+	
+	var usr = new User( userConf );
+
+@class User
+@constructor
+@param {object} userConf specifica tutte le informazioni del nuovo utente.
+*/
+var User = function (userConf) {
+	if (userConfValidator(userConf)){
+		/**
+		 * Identificatore unico usato dal server per identificare questo utente dagli altri.
+		 * @attribute _id
+		 * @type string
+		 * @readOnly
+		 */
+		this._id = &#x27;org.couchdb.user:&#x27; + userConf.name;
+		/**
+		 * Username utilizzato per il login dell&#x27;utente sul server
+		 * @attribute name
+		 * @type string
+		 * @readOnly
+		 */
+		this.name = userConf.name;
+		/**
+		 * Password utilizzata per il login dell&#x27;utente sul server
+		 * @attribute password
+		 * @type string
+		 * @readOnly
+		 */
+		this.password = userConf.password;
+		/**
+		 * Tipo dell&#x27;utente
+		 * @attribute type
+		 * @type string
+		 * @readOnly
+		 * @default &#x27;user&#x27;
+		 */
+		this.type = &#x27;user&#x27;;
+		/**
+		 * Ruoli dell&#x27;utente sul database
+		 * @readOnly
+		 * @attribute roles
+		 * @type array
+		 * @default []
+		 */
+		this.roles = [];
+		/**
+		 * Nick name usato dall&#x27;utente
+		 * @attribute nick
+		 * @type string
+		 * @readOnly
+		 */
+		this.nick = userConf.nick;
+		/**
+		 * Contatto e-mail usato dell&#x27;utente
+		 * @attribute mail
+		 * @type string
+		 * @readOnly
+		 */
+		this.mail = userConf.mail;
+		/**
+		 * Codifica &lt;code&gt;base64&lt;/code&gt; della stringa &#x27;User.name:User.password&#x27;
+		 * utilizzata nell&#x27;autenticazione via &lt;code&gt;HTTP&lt;/code&gt;
+		 * @attribute base64
+		 * @type string
+		 * @readOnly
+		 */
+		this.base64 = Ti.Utils.base64encode(userConf.name + &#x27;:&#x27; + userConf.password).text;
+	}
+};
+
+/**
+ * Aggiorna la configurazione dell&#x27;utente locale.
+ * @method update
+ * @param {object} newUserConf nuove caratteristiche dell&#x27;utente.
+ * @return {object} un oggetto di tipo &lt;code&gt;userConf&lt;/code&gt; con le vecchie configurazioni.
+ */
+User.prototype.update = function(newUserConf){
+	var oldUserConf = {
+		name: this.name,
+		password: this.password,
+		nick: this.nick,
+		mail: this.mail
+	};
+	if (userConfValidator(newUserConf)){
+		this._id = &#x27;org.couchdb.user:&#x27; + newUserConf.name;
+		this.name = newUserConf.name;
+		this.password = newUserConf.password;
+		this.type = &#x27;user&#x27;;
+		this.roles = [];
+		this.nick = newUserConf.nick;
+		this.mail = newUserConf.mail;
+		this.base64 = Ti.Utils.base64encode(newUserConf.name + &#x27;:&#x27; + newUserConf.password).text;
+		return oldUserConf;
+	}
+};
+
+exports.User = User;
+
+// -- Funzioni ausiliare per USER
+
+/**
+ * Controlla che un oggetto &lt;code&gt;userConf&lt;/code&gt; sia corretto.
+ * @private
+ * @method userConfValidator
+ * @param {object} uc oggetto &lt;code&gt;userConf&lt;/code&gt; da controllare
+ * @return {boolean} &lt;code&gt;true&lt;/code&gt; se l&#x27;oggetto è valido,
+ *                   &lt;code&gt;false&lt;/code&gt; altrimenti.
+ */
+var userConfValidator = function (uc) {
+	if (!uc)
+		throw {
+			error: &#x27;a userConf object is required&#x27;,
+			userConf: uc
+		};
+	else if (!uc.name     || typeof uc.name     != &#x27;string&#x27; ||
+	         !uc.password || typeof uc.password != &#x27;string&#x27; ||
+	         !uc.nick     || typeof uc.nick     != &#x27;string&#x27; ||
+	         !uc.mail     || typeof uc.mail     != &#x27;string&#x27;   )
+		throw {
+			error: &#x27;some userConf properties are invalid&#x27;,
+			userConf: uc
+		};
+	else
+		return true;
+};
+
+
+
+
+// -- DB -----------------------------------------------------------------------
+
+
+/**
+&lt;h3&gt;DB&lt;/h3&gt;
+&lt;p&gt;
+	Definisce il database remoto con il quale ci si vuole interfacciare.
+&lt;/p&gt;
+&lt;p&gt;
+	Per poter comunicare con il database remoto bisogna specificare il protocollo
+	impiegato, l&#x27;indirizzo IP o hostname del macchina che ospita il servizio, il
+	numero di porta sulla quale il server è in ascolto in attesa di connessioni e
+	il nome del database sul quale di vuole operare; Per il momento è necessario
+	fornire anche un amministratore del database se si vuole registrare un nuovo
+	utente.
+&lt;/p&gt;
+&lt;p&gt;
+	Per istanziare un nuovo database bisogna definire prima un oggetto &lt;b&gt;&lt;code&gt;dbConf&lt;/code&gt;&lt;/b&gt;
+	che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+	&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;proto&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: protocollo di comunicazione (per il momento solo &lt;b&gt;&lt;code&gt;http&lt;/code&gt;&lt;/b&gt;)
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;host&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: IP o hostname della macchina remota
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;port&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;number&lt;/i&gt;: numero della porta remota in ascolto
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;name&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: nome del database remoto
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;admin&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;Admin&lt;/i&gt;: istanza di un oggetto {{#crossLink &quot;Admin&quot;}}{{/crossLink}}
+	&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3&gt;Esempio:&lt;/h3&gt;
+
+	var dbConf = {
+		proto: &quot;http&quot;,
+		host: &quot;127.0.0.1&quot;,
+		port: 5984,
+		name: &quot;posts&quot;,
+		admin: new Admin( adminConf )
+	};
+	
+	var db = new DB( dbConf );
+
+@class DB
+@constructor
+@param {object} dbConf specifica tutte le informazioni del nuovo database.
+*/
+var DB = function (dbConf) {
+	if (dbConfValidator(dbConf)){
+		/**
+		 * Nome database remoto
+		 * @attribute name
+		 * @readonly
+		 * @type string
+		 */
+		this.name  = dbConf.name;
+		/**
+		 * Indirizzo IP o hostname del server remoto
+		 * @attribute host
+		 * @readonly
+		 * @type string
+		 */
+		this.host  = dbConf.host;
+		/**
+		 * Porta in ascolto del server remoto
+		 * @attribute port
+		 * @readonly
+		 * @type number
+		 */
+		this.port  = dbConf.port;
+		/**
+		 * Protocollo di comunicazione usato
+		 * @attribute proto
+		 * @readonly
+		 * @type string
+		 */
+		this.proto = dbConf.proto;
+		/**
+		 * Amministratore del database remoto.
+		 * @attribute admin
+		 * @readonly
+		 * @type Admin
+		 */
+		this.admin = dbConf.admin;
+	}
+};
+
+/**
+ * Costruisce l&#x27;URL completo per raggiungere il server remoto.
+ *
+ * @method getURLServer
+ * @return {string} l&#x27;URL che punta al server remoto che gestisce i database
+ * @example
+ *     &quot;http://127.0.0.1:5984&quot;
+ */
+DB.prototype.getURLServer = function(){
+	return this.proto + &#x27;://&#x27; + this.host + &#x27;:&#x27; + this.port;
+};
+
+/**
+ * Costruisce l&#x27;URL completo per raggiungere il database sul server remoto.
+ *
+ * @method getURLDB
+ * @return {string} l&#x27;URL che punta al database sul server remoto
+ * @example
+ *     &quot;http://127.0.0.1:5984/posts&quot;
+ */
+DB.prototype.getURLDB = function(){
+	return this.proto + &#x27;://&#x27; + this.host + &#x27;:&#x27; + this.port + &#x27;/&#x27; + this.name;
+};
+
+exports.DB = DB;
+
+// -- Funzioni ausiliare per DB
+
+
+/**
+ * Controlla che un oggetto &lt;code&gt;dbConf&lt;/code&gt; sia corretto.
+ * @private
+ * @method dbConfValidator
+ * @param {object} dbc oggetto &lt;code&gt;dbConf&lt;/code&gt; da controllare
+ * @return {boolean} &lt;code&gt;true&lt;/code&gt; se l&#x27;oggetto è valido,
+ *                   &lt;code&gt;false&lt;/code&gt; altrimenti.
+ */
+var dbConfValidator = function (dbc) {
+	if (!dbc)
+		throw {
+			error: &#x27;a dbConf object is required&#x27;,
+			dbConf: dbc
+		};
+	else if (!dbc.name  || typeof dbc.name  != &#x27;string&#x27;   ||
+	         !dbc.host  || typeof dbc.host  != &#x27;string&#x27;   ||
+	         !dbc.proto || typeof dbc.proto != &#x27;string&#x27;   ||
+	         !dbc.admin || !(dbc.admin instanceof Admin)  ||
+	         !dbc.port  || typeof dbc.port  != &#x27;number&#x27;   || dbc.port &lt;= 0 || dbc.port &gt;= 65536)
+		throw {
+			error: &#x27;some dbConf properties are invalid&#x27;,
+			dbConf: dbc
+		};
+	else
+		return true;
+};
+
+
+
+
+// -- ADMIN --------------------------------------------------------------------
+
+
+/**
+&lt;h3&gt;Admin&lt;/h3&gt;
+&lt;p&gt;
+	Definisce l&#x27;amministratore del database remoto.
+&lt;/p&gt;
+&lt;p&gt;
+	Per poter registrare un nuovo utente sul database è necessario operare come
+	amministratore quindi bisogna fornire le credenziali di amministrazione.
+&lt;/p&gt;
+&lt;p&gt;
+	Per istanziare un nuovo amministratore bisogna definire prima un oggetto &lt;b&gt;&lt;code&gt;adminConf&lt;/code&gt;&lt;/b&gt;
+	che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+	&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;name&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: username dell&#x27;amministratore
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;password&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: password dell&#x27;amministratore
+	&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3&gt;Esempio:&lt;/h3&gt;
+
+	var adminConf = {
+		name: &quot;admin&quot;,
+		password: &quot;1234&quot;
+	};
+	
+	var admin = new Admin( adminConf );
+
+@class Admin
+@constructor
+@param {object} adminConf specifica tutte le informazioni del nuovo amministratore.
+*/
+var Admin = function (adminConf) {
+	if (adminConfValidator(adminConf))
+		/**
+		 * Codifica &lt;code&gt;base64&lt;/code&gt; delle credenziali di accesso dell&#x27;amministratore del database remoto
+		 * @attribute base64
+		 * @readOnly
+		 * @type string
+		 */
+		this.base64 = Ti.Utils.base64encode(adminConf.name + &#x27;:&#x27; + adminConf.password).text;
+};
+
+exports.Admin = Admin;
+
+// -- Funzioni ausiliare per ADMIN
+
+
+/**
+ * Controlla che un oggetto &lt;code&gt;adminConf&lt;/code&gt; sia corretto.
+ * @private
+ * @method adminConfValidator
+ * @param {object} dbc oggetto &lt;code&gt;adminConf&lt;/code&gt; da controllare
+ * @return {boolean} &lt;code&gt;true&lt;/code&gt; se l&#x27;oggetto è valido,
+ *                   &lt;code&gt;false&lt;/code&gt; altrimenti.
+ */
+var adminConfValidator = function (ac) {
+	if (!ac)
+		throw {
+			error: &#x27;a adminConf object is required&#x27;,
+			adminConf: ac
+		};
+	else if (!ac.name      || typeof ac.name      != &#x27;string&#x27; ||
+	         !ac.password  || typeof ac.password  != &#x27;string&#x27;  )
+		throw {
+			error: &#x27;some adminConf properties are invalid&#x27;,
+			georepConf: ac
+		};
+	else
+		return true;
+};
+
+
+
+
+// -- GEOREP -------------------------------------------------------------------
+
+
+/**
+&lt;h3&gt;Georep&lt;/h3&gt;
+&lt;p&gt;
+	Definisce un interfaccia per utilizzare i servizi offerti dal database couchdb
+	remoto.
+&lt;/p&gt;
+&lt;p&gt;
+	Per poter comunicare con il database e inviare query è necessario specificare
+	il database remoto e il nostro utente per permettere che il server ci autentifichi e,
+	nel caso non fossimo un utente già registrato dobbiamo provvedere anche a questo. 
+&lt;/p&gt;
+&lt;p&gt;
+	Per inizializzare una nuova interfaccia dobbiamo prima definire un oggetto &lt;b&gt;&lt;code&gt;georepConf&lt;/code&gt;&lt;/b&gt;
+	che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+	&lt;ul&gt;
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;user&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;User&lt;/i&gt;: un istanza di un oggetto {{#crossLink &quot;User&quot;}}{{/crossLink}}
+		&lt;li&gt;&lt;b&gt;&lt;code&gt;db&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;DB&lt;/i&gt;: un istanza di un oggetto {{#crossLink &quot;DB&quot;}}{{/crossLink}}
+	&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3&gt;Esempio:&lt;/h3&gt;
+
+	var georepConf = {
+		user: new User( userConf ),
+		db: new DB( dbConf )
+	};
+	
+	var service = new Georep( georepConf );
+
+&lt;p&gt;
+	I metodi che interagiscono con il server sono asincroni e quindi necessitano
+	di una funzione di &lt;b&gt;callback&lt;/b&gt; che verrà eseguita al termine dell&#x27;interazione
+	con il server che avrà la funzione di elaborare i dati restituiti dal server
+	o gestire eventuali errori.
+&lt;/p&gt;
+&lt;p&gt;
+	La funzione di callback deve ammettere 2 parametri che al momento della
+	chiamata verranno utilizzati in questo modo:
+	&lt;ul&gt;
+		&lt;li&gt;
+			se si è verificato un errore, il &lt;b&gt;primo&lt;/b&gt; parametro conterrà le informazioni
+			relative mentre il &lt;b&gt;secondo&lt;/b&gt; sarà settato ad &lt;code&gt;undefined&lt;/code&gt;;
+		&lt;/li&gt;
+		&lt;li&gt;
+			se la query è andata a buon fine allora il &lt;b&gt;primo&lt;/b&gt; parametro sarà
+			&lt;code&gt;undefined&lt;/code&gt; e il &lt;b&gt;secondo&lt;/b&gt; conterrà la risposta inviata dal
+			server.
+		&lt;/li&gt;
+	&lt;/ul&gt;
+&lt;/p&gt;
+&lt;h3&gt;Esempio:&lt;/h3&gt;
+&lt;p&gt;Una callback valida potrebbe essere:&lt;/p&gt;
+
+	var callback = function (err, data) {
+		if(!err) {
+			// nessun errore, posso lavorare con &#x27;data&#x27;...
+		} else {
+			// si è verificato un errore descritto in &#x27;err&#x27;.
+		}
+	};
+
+@class Georep
+@constructor
+@param {object} georepConf specifica tutte le informazioni della nuova interfaccia.
+*/
+var Georep = function (georepConf) {
+	if (georepConfValidator(georepConf)){
+		/**
+		 * Database remoto
+		 * @attribute db
+		 * @readOnly
+		 * @type DB
+		 */
+		this.db = georepConf.db;
+		/**
+		 * Utente che utilizza il servizio
+		 * @attribute user
+		 * @readOnly
+		 * @type User
+		 */
+		this.user = georepConf.user;
+	}
+};
+
+/**
+ * Chiede un particolare documento al database attraverso il suo identificatore
+ * unico interno al database.
+ *
+ * @method getDoc
+ * @param {string} docId identificatore unico del documento nel database
+ * @param {boolean} attachments se &lt;code&gt;true&lt;/code&gt; viene scaricato anche l&#x27;allegato.
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */ 
+Georep.prototype.getDoc = function(docId, attachments, callback){
+	if( arguments.length &lt; 2 )
+		throw {
+			error: &#x27;getDoc() richiede almeno 2 argomenti: docId (string), attachment (boolean).&#x27;,
+			args: arguments
+		};
+	else if (!docId || typeof docId != &#x27;string&#x27; || typeof attachments != &#x27;boolean&#x27;)
+		throw {
+			error: &#x27;Uno o piu\&#x27; parametri non validi.&#x27;,
+			args: arguments
+		};
+	else if (callback &amp;&amp; typeof callback != &#x27;function&#x27;){
+		throw {
+			error: &#x27;callback deve essere una funzione.&#x27;,
+			args: arguments
+		};
+	} else {
+		var attach = (attachments)?&#x27;?attachments=true&#x27;:&#x27;?attachments=false&#x27;;
+		var url = this.db.getURLDB() + &#x27;/&#x27; + docId + attach;
+
+		var client = Ti.Network.createHTTPClient({
+			onload: function(data){
+				if(callback)
+					// this.responseText contiene la risposta di tipo json
+					callback(undefined,this.responseText);
+			},
+			onerror: function(e){
+				if(callback)
+					callback(e,undefined);
+			}
+		});
+		
+		client.open(&quot;GET&quot;, url);
+		client.setRequestHeader(&quot;Authorization&quot;, &quot;Basic &quot; + this.user.base64);
+		
+		// mi assicura che la risposta arrivi con l&#x27;allegato in base64
+		// invece che in binario in un oggetto MIME a contenuti multipli
+		client.setRequestHeader(&quot;Accept&quot;, &quot;application/json&quot;);
+		client.send();
+	}
+};
+
+/**
+ * Chiede tutti i documenti che sono relativi ad una certa area geografica rettangolare
+ * definita dalle coordinate dei vertici in basso a sinistra e in alto a destra.
+ *
+ * Un vertice quindi è un punto sulla mappa che deve essere rappresentato da un oggetto
+ * che deve avere 2 properties:
+ * &lt;ul&gt;
+ *     &lt;li&gt;&lt;b&gt;&lt;code&gt;lat&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;number&lt;/i&gt;: compreso tra -90 e 90 che indica la latitudine &lt;b&gt;nord&lt;/b&gt;
+ *     &lt;li&gt;&lt;b&gt;&lt;code&gt;lng&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;number&lt;/i&gt;: compreso tra -180 e 180 che indica la longitudine &lt;b&gt;est&lt;/b&gt;
+ * &lt;/ul&gt;
+ * Per esempio:
+
+	var mapPoint = {
+		lat: 43.720736,
+		lng: 10.408392
+	}
+
+ * @method getDocsInBox
+ * @param {object} bl_corner vertice in basso a sinistra dell&#x27;area della mappa interessata
+ * @param {object} tr_corner vertice in alto a destra dell&#x27;area della mappa interessate
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.getDocsInBox = function(bl_corner, tr_corner, callback){
+	if (arguments.length &lt; 2)
+		throw {
+			error: &#x27;getDocsInBox() richiede due argomenti: bl_corner (object), tr_corner (object).&#x27;,
+			args: arguments
+		};
+	else if (!mapPointValidator(bl_corner) || !mapPointValidator(tr_corner))
+		throw {
+			error: &#x27;Uno o piu\&#x27; parametri non validi.&#x27;,
+			args: arguments
+		};
+	else if (arguments.length &gt; 2 &amp;&amp; typeof callback != &#x27;function&#x27;)
+		throw {
+			error: &#x27;Parametro opzionale non valido: callback.&#x27;,
+			args: arguments
+		};
+	else {
+		var viewPath = constants.designDocs[0].name + &#x27;/&#x27; +
+		               constants.designDocs[0].handlers[1].name + &#x27;/&#x27; +
+		               constants.designDocs[0].handlers[1].views[0];
+		var queryOpts = &#x27;?bbox=&#x27; +
+		                bl_corner.lng + &#x27;,&#x27; + bl_corner.lat + &#x27;,&#x27; +
+		                tr_corner.lng + &#x27;,&#x27; + tr_corner.lat;
+		                
+		var url = this.db.getURLDB() + &#x27;/_design/&#x27; + viewPath + queryOpts;
+		
+		var client = Ti.Network.createHTTPClient({
+			onload: function(data){
+				if(callback)
+					callback(undefined, this.responseText);
+			},
+			onerror: function(e){
+				if(callback)
+					callback(e,undefined);
+			}
+		});
+		client.open(&quot;GET&quot;, url);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Accept&quot;, &#x27;application/json&#x27;);
+		client.send();
+	}
+};
+
+/**
+ * Chiede al database tutti i documenti creati da un determinato utente indicando
+ * il suo identificatore unico.
+ *
+ * @method getUserDocs
+ * @param {string} userId identificatore unico dell&#x27;utente sul server
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.getUserDocs = function(userId, callback){
+	var viewPath = constants.designDocs[0].name + &#x27;/&#x27; +
+		           constants.designDocs[0].handlers[0].name + &#x27;/&#x27; +
+		           constants.designDocs[0].handlers[0].views[0];
+	var queryOpts = &#x27;?key=&quot;&#x27; + userId + &#x27;&quot;&#x27;;
+	
+	if (arguments.length &lt; 1)
+		throw {
+			error: &#x27;getUserDocs() richiede almeno un argomento: userId (string).&#x27;,
+			args: arguments
+		};
+	else if (!userId || typeof userId != &#x27;string&#x27;)
+		throw {
+			error: &#x27;parametro non valido: userId deve essere una stringa non vuota.&#x27;,
+			args: arguments
+		};
+	else if (arguments.length &gt; 1 &amp;&amp; typeof callback != &#x27;function&#x27;)
+		throw {
+			error: &#x27;parametro opzionale non valido: callback deve essere una funzione.&#x27;,
+			args: arguments
+		};
+	else {
+		var url = this.db.getURLDB() + &#x27;/_design/&#x27; + viewPath + queryOpts;
+		var client = Ti.Network.createHTTPClient({
+			onload: function(data){
+				if(callback)
+					callback(undefined, this.responseText);
+			},
+			onerror: function(e){
+				if(callback)
+					callback(e,undefined);
+			}
+		});
+		client.open(&quot;GET&quot;, url);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Accept&quot;, &#x27;application/json&#x27;);
+		client.send();
+	}
+};
+
+/**
+ * Invia al server un nuovo documento
+ * @method postDoc
+ * @param {object} doc nuovo documento da inviare al server
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.postDoc = function(doc,callback){
+	if( arguments.length &lt; 1 ){
+			throw {
+				error: &#x27;postDoc() richiede almeno 1 argomento: doc (object).&#x27;,
+				args: arguments
+			};
+		}
+		else if ( typeof doc != &#x27;object&#x27; ||
+		!doc.title || typeof doc.title != &#x27;string&#x27; ||
+		!doc.msg   || typeof doc.msg   != &#x27;string&#x27; ||
+		!doc.img   || typeof doc.img   != &#x27;object&#x27; ||
+		!doc.img.content_type || typeof doc.img.content_type != &#x27;string&#x27; ||
+		!doc.img.data         || typeof doc.img.data         != &#x27;string&#x27; ||
+		!doc.loc || typeof doc.loc != &#x27;object&#x27; ||
+		!doc.loc.latitude  || typeof doc.loc.latitude  != &#x27;number&#x27; || doc.loc.latitude  &gt;  90 || doc.loc.latitude  &lt;  -90 ||
+		!doc.loc.longitude || typeof doc.loc.longitude != &#x27;number&#x27; || doc.loc.longitude &gt; 180 || doc.loc.longitude &lt; -180 ){
+			throw {
+				error: &#x27;Parametro &quot;doc&quot; non valido.&#x27;,
+				args: arguments
+			};
+		}
+		else if (typeof callback != &#x27;function&#x27;){
+			throw {
+				error: &#x27;Il parametro opzionale deve essere una funzione&#x27;,
+				args: arguments
+			};
+		}
+		else {
+			var newDoc = {};
+			newDoc.userId = this.user._id;
+			newDoc.title = doc.title;
+			newDoc.msg = doc.msg;
+			newDoc.loc = doc.loc;
+			newDoc._attachments = {
+				img: doc.img
+			};
+			var url = this.db.getURLDB();
+			var client = Ti.Network.createHTTPClient({
+				onload: function(data){
+					if(callback)
+						callback(undefined,data);
+				},
+				error: function(e){
+					if(callback)
+						callback(e,undefined);
+				}
+			});
+			client.open(&quot;POST&quot;, url);
+			
+			client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+			client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
+			
+			client.send(JSON.stringify(newDoc));
+		}
+};
+
+/**
+ * Verifica se l&#x27;utente locale è già registrato sul server.
+ * @method checkRemoteUser
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.checkRemoteUser = function(callback){
+	// callback è obbligatorio perché checkUser() esegue una richiesta asincrona
+	if( arguments.length != 1 || typeof callback != &#x27;function&#x27;){
+		throw {
+			error: &#x27;checkUser() richiede un argomento: callback (function(err, data)).&#x27;,
+			args: arguments
+		};	
+	} else {
+		// richiedo info sul db, usando come credenziali di accesso quelle dell&#x27;utente locale, 
+		// se l&#x27;accesso al db viene negato, significa che l&#x27;utente non è registrato
+		var url = this.db.getURLServer();
+		var client = Ti.Network.createHTTPClient({
+			onload: function(data){
+				callback(undefined, {isRegistered: true});
+			},
+			onerror: function(e){
+				if (e.error == &#x27;401&#x27;) {
+					callback(undefined, {isRegistered: false});
+				} else {
+					callback(e, undefined);
+				}
+			}
+		});
+		client.open(&quot;GET&quot;, url);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.send();
+	}
+};
+
+/**
+ * Richiede al server di registrare l&#x27;utente locale
+ * @method signupRemoteUser
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.signupRemoteUser = function(callback){
+	if( arguments.length == 1 &amp;&amp; typeof callback != &#x27;function&#x27; ) {
+					throw {
+						error: &#x27;Il parametro opzionale deve essere una funzione&#x27;,
+						args: arguments
+					};
+	} else {
+		var url = this.db.getURLServer() + &#x27;/_users/&#x27; + this.user._id;
+		Ti.API.debug(url);		  
+		var client = Ti.Network.createHTTPClient({
+			onload: function(data){
+				// console.log(&quot;Utente registrato con successo! &quot; +data);
+				if (callback) {
+					callback(undefined, data);
+				}
+			},
+			onerror: function(e){
+				// console.log(&quot;Utente NON registrato! &quot; + e.err);
+				if (callback){
+					callback(e, undefined);
+				}
+			}
+		});
+		client.open(&quot;PUT&quot;, url);
+		
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.db.admin.base64);
+		client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
+		
+		var usersignup = {
+			 name: this.user.name,
+			 password: this.user.password,
+			 nick: this.user.nick,
+			 mail: this.user.mail,
+			 type: this.user.type,
+			 roles: this.user.roles
+		};
+		client.send(JSON.stringify(usersignup));
+		
+	}
+};
+
+/**
+ * Chiede al server di aggiornare il nickname e la e-mail dell&#x27;utente locale con
+ * dei nuovi valori. Se l&#x27;operazione riesce, vendono aggiornati anche i valori locali.
+ * @method updateRemoteUser
+ * @param {object} user oggetto &lt;code&gt;userConf&lt;/code&gt; con i nuovi valori per
+ *                 &lt;b&gt;&lt;code&gt;nick&lt;/code&gt;&lt;/b&gt; e &lt;b&gt;&lt;code&gt;mail&lt;/code&gt;&lt;/b&gt;. Le altre
+ *                 properties vengono ignorate e possono essere anche omesse in
+ *                 questo caso.
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.updateRemoteUser = function(user, callback){
+	if (arguments.length &lt; 1){
+		throw {
+			error: &#x27;update() richiede un argomento: user (object).&#x27;,
+			args: arguments
+		};
+	} else if (typeof user != &#x27;object&#x27;) {
+		throw {
+			error: &#x27;Impossibile aggiornare l\&#x27;utente, parametro non valido.&#x27;,
+			args: arguments
+		};
+	} else if (
+	!user.nick      || typeof user.nick      != &#x27;string&#x27; ||
+	!user.mail      || typeof user.mail      != &#x27;string&#x27; ){
+		throw {
+			error: &#x27;Impossibile settare &quot;user&quot;, uno o piu\&#x27; properties non valide.&#x27;,
+			args: arguments
+		};
+	} else if (arguments.length &gt; 1 &amp;&amp; typeof callback != &#x27;function&#x27;) {
+		throw {
+			error: &#x27;Il parametro opzionale deve essere una funzione&#x27;,
+			args: arguments
+		};
+	} else {
+		var tmpService = this; // serve perchè dentro la funzione di callback this è window anziché Georep
+		this.getRemoteUser(function(err,data){					
+			if(!err){
+				var rev = JSON.parse(data)._rev;
+				var url = tmpService.db.getURLServer() + &#x27;/_users/&#x27; + tmpService.user._id +
+					  &#x27;?rev=&#x27; + rev;
+					  
+				var newLocalUser = {
+					name: tmpService.user.name,
+					password: tmpService.user.password,
+					nick: user.nick,
+					mail: user.mail
+				};
+				var newRemoteUser = newLocalUser;
+				newRemoteUser.type = tmpService.user.type;
+				newRemoteUser.roles = tmpService.user.roles;
+				newRemoteUser._id = tmpService.user._id;
+
+				var client = Ti.Network.createHTTPClient({
+					onload: function(data){
+						tmpService.user.update(newLocalUser);
+						if (callback) {
+							callback(undefined, data);
+						}
+					},
+					onerror: function(e){
+						if (callback){
+							callback(e, undefined);
+						}
+					}
+				});
+				client.open(&quot;PUT&quot;, url);
+		
+				client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + tmpService.db.admin.base64);
+				client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
+				
+				client.send(JSON.stringify(newRemoteUser));
+			}else{
+				if (callback){
+					callback(err, undefined);
+				}
+			}
+		});
+	}
+};
+
+/**
+ * Chiede al server tutte le informazioni sull&#x27;utente locale
+ * @method getRemoteUser
+ * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
+ */
+Georep.prototype.getRemoteUser = function(callback){
+		// callback è obbligatorio perché getRemote usa una funzione asincrona
+	if( arguments.length != 1){
+		throw {
+			error: &#x27;getRemote() richiede un argomento: callback (function(err, data)).&#x27;,
+		};	
+	} else if (typeof callback != &#x27;function&#x27;){
+		throw {
+			error: &#x27;Parametro non valido: callback deve essere \&#x27;function\&#x27;.&#x27;,
+			args: arguments
+		};
+	} else {
+		var url = this.db.getURLServer() + &#x27;/_users/&#x27; + this.user._id;
+		var client = Ti.Network.createHTTPClient({
+			onload: function(data){
+				callback(undefined, this.responseText);
+			},
+			onerror: function(e){
+				callback(e, undefined);
+			}
+		});
+		client.open(&quot;GET&quot;, url);
+		
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Accept&quot;, &#x27;application/json&#x27;);
+		
+		client.send();
+	}
+};
+
+exports.Georep = Georep;
+
+// -- Funzioni ausiliare per GEOREP
+
+
+/**
+ * Controlla che un oggetto &lt;code&gt;georepConf&lt;/code&gt; sia corretto.
+ * @private
+ * @method georepConfValidator
+ * @param {object} gc oggetto &lt;code&gt;georepConf&lt;/code&gt; da controllare
+ * @return {boolean} &lt;code&gt;true&lt;/code&gt; se l&#x27;oggetto è valido,
+ *                   &lt;code&gt;false&lt;/code&gt; altrimenti.
+ */
+var georepConfValidator = function (gc) {
+	if (!gc)
+		throw {
+			error: &#x27;a georepConf object is required&#x27;,
+			georepConf: gc
+		};
+	else if (!gc.db   || !(gc.db   instanceof DB)   ||
+	         !gc.user || !(gc.user instanceof User)  )
+		throw {
+			error: &#x27;some georepConf properties are invalid&#x27;,
+			georepConf: gc
+		};
+	else
+		return true;
+};
+
+/**
+ * Controlla che un oggetto che rappresenta un punto sulla mappa sia corretto.
+ * @private
+ * @method mapPointValidator
+ * @param {object} point oggetto da controllare
+ * @return {boolean} &lt;code&gt;true&lt;/code&gt; se l&#x27;oggetto è valido,
+ *                   &lt;code&gt;false&lt;/code&gt; altrimenti.
+ */
+var mapPointValidator = function (point) {
+	return !(typeof point != &#x27;object&#x27; ||
+	!point.lng || typeof point.lng != &#x27;number&#x27;|| point.lng &lt; -180 || point.lng &gt; 180 ||
+	!point.lat || typeof point.lat != &#x27;number&#x27;|| point.lat &lt;  -90 || point.lat &gt;  90  );
+};
+
+
+
+// -- COSTANTI utilizzate nel resto del codice ---------------------------------
+
+var constants = {
+	// vettore contenente l&#x27;elenco dei designDoc usati
+	designDocs: [
+		{
+			name: &#x27;queries&#x27;, // nome di questo design document
+			handlers: [ // vettore dei gestori delle diverse views
+				{
+					name: &#x27;_view&#x27;, // gestore delle views map-reduce
+					views: [&#x27;allDocsByUser&#x27;] // elenco delle views gestite da questo gestore
+				},
+				{
+					name: &#x27;_spatial&#x27;, // gestore delle views spaziali di geocouch
+					views: [&#x27;allDocsByLoc&#x27;] // elenco delle views spaziali
+				}
+			]
+		}
+	]
+};
+
+
+    </pre>
+</div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script src="../assets/vendor/prettify/prettify-min.js"></script>
+<script>prettyPrint();</script>
+<script src="../assets/js/yui-prettify.js"></script>
+<script src="../assets/../api.js"></script>
+<script src="../assets/js/api-filter.js"></script>
+<script src="../assets/js/api-list.js"></script>
+<script src="../assets/js/api-search.js"></script>
+<script src="../assets/js/apidocs.js"></script>
+</body>
+</html>

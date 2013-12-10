@@ -1,0 +1,633 @@
+{
+    "project": {},
+    "files": {
+        "lib/georep.js": {
+            "name": "lib/georep.js",
+            "modules": {
+                "georep": 1
+            },
+            "classes": {
+                "User": 1,
+                "DB": 1,
+                "Admin": 1,
+                "Georep": 1
+            },
+            "fors": {},
+            "namespaces": {}
+        }
+    },
+    "modules": {
+        "georep": {
+            "name": "georep",
+            "submodules": {},
+            "classes": {
+                "User": 1,
+                "DB": 1,
+                "Admin": 1,
+                "Georep": 1
+            },
+            "fors": {},
+            "namespaces": {},
+            "tag": "module",
+            "file": "lib/georep.js",
+            "line": 424,
+            "description": "<p>Fornisce gli oggetti per poter utilizzare un db remoto couchdb esteso con geocouch.</p>\n<p>\n\tSul database è possibile immagazzinare record geo-referenziati che contengono le\n\tseguenti informazioni:\n\t<ul>\n\t\t<li><b><code>title</code></b> - <i>string</i>:\n\t\t\tTitolo per la segnalazione.\n\t\t</li>\n\t\t<li><b><code>msg</code></b> - <i>string</i>:\n\t\t\tDescrizione più dettagliata per la segnalazione.\n\t\t</li>\n\t\t<li><b><code>img</code></b> - <i>object</i>:\n\t\t\tImmagine allegata per documentare la segnalazione.\n\t\t\t<ul>\n\t\t\t\t<li><b><code>content_type</code></b> - <i>string</i>:\n\t\t\t\t\tTipo di contenuto, per esempio <code>\"image/jpg\"</code>.\n\t\t\t\t</li>\n\t\t\t\t<li><b><code>data</code></b> - <i>string</i>:\n\t\t\t\t\tCodifica <code>base64</code> del documento allegato.\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<li><b><code>loc</code></b> - <i>object</i>:\n\t\t\tPosizione geografica della segnalazione.\n\t\t\t<ul>\n\t\t\t\t<li><b><code>latitude</code></b> - <i>number</i>:\n\t\t\t\t\tLatitudine Nord.\n\t\t\t\t</li>\n\t\t\t\t<li><b><code>longitude</code></b> - <i>number</i>:\n\t\t\t\t\tLongitudine Est.\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</li>\n\t</ul>\n</p>"
+        }
+    },
+    "classes": {
+        "User": {
+            "name": "User",
+            "shortname": "User",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "georep",
+            "namespace": "",
+            "file": "lib/georep.js",
+            "line": 44,
+            "description": "<h3>User</h3>\n<p>\n\tDefinisce l'utente locale che utilizzerà il database remoto.<br>\n\tTutte le segnalazioni creare e inviate al server saranno associate a questo utente.\n</p>\n<p>\n\tOgni utente è identificato sul server da una coppia <i>username</i> e <i>password</i>\n\ted è personalizzato da un <i>nickname</i> e da un contatto <i>e-mail</i> visibili\n\tagli altri utenti.\n</p>\n<p>\n\tPer istanziare un nuovo utente bisogna definire prima un oggetto <b><code>userConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>name</code></b> - <i>string</i>: user name utilizzato per il login\n\t\t<li><b><code>password</code></b> - <i>string</i>: password utilizzata per il login\n\t\t<li><b><code>nick</code></b> - <i>string</i>: nome personalizzato per l'utente\n\t\t<li><b><code>mail</code></b> - <i>string</i>: contatto e-mail dell'utente\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar userConf = {\n\t\tname: \"username\",\n\t\tpassword: \"1234\",\n\t\tnick: \"userNick\",\n\t\tmail: \"myemail@mail.com\"\n\t};\n\t\n\tvar usr = new User( userConf );",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "userConf",
+                    "description": "specifica tutte le informazioni del nuovo utente.",
+                    "type": "Object"
+                }
+            ]
+        },
+        "DB": {
+            "name": "DB",
+            "shortname": "DB",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "georep",
+            "namespace": "",
+            "file": "lib/georep.js",
+            "line": 206,
+            "description": "<h3>DB</h3>\n<p>\n\tDefinisce il database remoto con il quale ci si vuole interfacciare.\n</p>\n<p>\n\tPer poter comunicare con il database remoto bisogna specificare il protocollo\n\timpiegato, l'indirizzo IP o hostname del macchina che ospita il servizio, il\n\tnumero di porta sulla quale il server è in ascolto in attesa di connessioni e\n\til nome del database sul quale di vuole operare; Per il momento è necessario\n\tfornire anche un amministratore del database se si vuole registrare un nuovo\n\tutente.\n</p>\n<p>\n\tPer istanziare un nuovo database bisogna definire prima un oggetto <b><code>dbConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>proto</code></b> - <i>string</i>: protocollo di comunicazione (per il momento solo <b><code>http</code></b>)\n\t\t<li><b><code>host</code></b> - <i>string</i>: IP o hostname della macchina remota\n\t\t<li><b><code>port</code></b> - <i>number</i>: numero della porta remota in ascolto\n\t\t<li><b><code>name</code></b> - <i>string</i>: nome del database remoto\n\t\t<li><b><code>admin</code></b> - <i>Admin</i>: istanza di un oggetto {{#crossLink \"Admin\"}}{{/crossLink}}\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar dbConf = {\n\t\tproto: \"http\",\n\t\thost: \"127.0.0.1\",\n\t\tport: 5984,\n\t\tname: \"posts\",\n\t\tadmin: new Admin( adminConf )\n\t};\n\t\n\tvar db = new DB( dbConf );",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "dbConf",
+                    "description": "specifica tutte le informazioni del nuovo database.",
+                    "type": "Object"
+                }
+            ]
+        },
+        "Admin": {
+            "name": "Admin",
+            "shortname": "Admin",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "georep",
+            "namespace": "",
+            "file": "lib/georep.js",
+            "line": 348,
+            "description": "<h3>Admin</h3>\n<p>\n\tDefinisce l'amministratore del database remoto.\n</p>\n<p>\n\tPer poter registrare un nuovo utente sul database è necessario operare come\n\tamministratore quindi bisogna fornire le credenziali di amministrazione.\n</p>\n<p>\n\tPer istanziare un nuovo amministratore bisogna definire prima un oggetto <b><code>adminConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>name</code></b> - <i>string</i>: username dell'amministratore\n\t\t<li><b><code>password</code></b> - <i>string</i>: password dell'amministratore\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar adminConf = {\n\t\tname: \"admin\",\n\t\tpassword: \"1234\"\n\t};\n\t\n\tvar admin = new Admin( adminConf );",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "adminConf",
+                    "description": "specifica tutte le informazioni del nuovo amministratore.",
+                    "type": "Object"
+                }
+            ]
+        },
+        "Georep": {
+            "name": "Georep",
+            "shortname": "Georep",
+            "classitems": [],
+            "plugins": [],
+            "extensions": [],
+            "plugin_for": [],
+            "extension_for": [],
+            "module": "georep",
+            "namespace": "",
+            "file": "lib/georep.js",
+            "line": 424,
+            "description": "<h3>Georep</h3>\n<p>\n\tDefinisce un interfaccia per utilizzare i servizi offerti dal database couchdb\n\tremoto.\n</p>\n<p>\n\tPer poter comunicare con il database e inviare query è necessario specificare\n\til database remoto e il nostro utente per permettere che il server ci autentifichi e,\n\tnel caso non fossimo un utente già registrato dobbiamo provvedere anche a questo. \n</p>\n<p>\n\tPer inizializzare una nuova interfaccia dobbiamo prima definire un oggetto <b><code>georepConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>user</code></b> - <i>User</i>: un istanza di un oggetto {{#crossLink \"User\"}}{{/crossLink}}\n\t\t<li><b><code>db</code></b> - <i>DB</i>: un istanza di un oggetto {{#crossLink \"DB\"}}{{/crossLink}}\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar georepConf = {\n\t\tuser: new User( userConf ),\n\t\tdb: new DB( dbConf )\n\t};\n\t\n\tvar service = new Georep( georepConf );\n\n<p>\n\tI metodi che interagiscono con il server sono asincroni e quindi necessitano\n\tdi una funzione di <b>callback</b> che verrà eseguita al termine dell'interazione\n\tcon il server che avrà la funzione di elaborare i dati restituiti dal server\n\to gestire eventuali errori.\n</p>\n<p>\n\tLa funzione di callback deve ammettere 2 parametri che al momento della\n\tchiamata verranno utilizzati in questo modo:\n\t<ul>\n\t\t<li>\n\t\t\tse si è verificato un errore, il <b>primo</b> parametro conterrà le informazioni\n\t\t\trelative mentre il <b>secondo</b> sarà settato ad <code>undefined</code>;\n\t\t</li>\n\t\t<li>\n\t\t\tse la query è andata a buon fine allora il <b>primo</b> parametro sarà\n\t\t\t<code>undefined</code> e il <b>secondo</b> conterrà la risposta inviata dal\n\t\t\tserver.\n\t\t</li>\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n<p>Una callback valida potrebbe essere:</p>\n\n\tvar callback = function (err, data) {\n\t\tif(!err) {\n\t\t\t// nessun errore, posso lavorare con 'data'...\n\t\t} else {\n\t\t\t// si è verificato un errore descritto in 'err'.\n\t\t}\n\t};",
+            "is_constructor": 1,
+            "params": [
+                {
+                    "name": "georepConf",
+                    "description": "specifica tutte le informazioni della nuova interfaccia.",
+                    "type": "Object"
+                }
+            ]
+        }
+    },
+    "classitems": [
+        {
+            "file": "lib/georep.js",
+            "line": 82,
+            "description": "Identificatore unico usato dal server per identificare questo utente dagli altri.",
+            "itemtype": "attribute",
+            "name": "_id",
+            "type": "string",
+            "readonly": "",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 89,
+            "description": "Username utilizzato per il login dell'utente sul server",
+            "itemtype": "attribute",
+            "name": "name",
+            "type": "string",
+            "readonly": "",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 96,
+            "description": "Password utilizzata per il login dell'utente sul server",
+            "itemtype": "attribute",
+            "name": "password",
+            "type": "string",
+            "readonly": "",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 103,
+            "description": "Tipo dell'utente",
+            "itemtype": "attribute",
+            "name": "type",
+            "type": "string",
+            "readonly": "",
+            "default": "'user'",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 111,
+            "description": "Ruoli dell'utente sul database",
+            "readonly": "",
+            "itemtype": "attribute",
+            "name": "roles",
+            "type": "array",
+            "default": "[]",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 119,
+            "description": "Nick name usato dall'utente",
+            "itemtype": "attribute",
+            "name": "nick",
+            "type": "string",
+            "readonly": "",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 126,
+            "description": "Contatto e-mail usato dell'utente",
+            "itemtype": "attribute",
+            "name": "mail",
+            "type": "string",
+            "readonly": "",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 133,
+            "description": "Codifica <code>base64</code> della stringa 'User.name:User.password'\nutilizzata nell'autenticazione via <code>HTTP</code>",
+            "itemtype": "attribute",
+            "name": "base64",
+            "type": "string",
+            "readonly": "",
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 144,
+            "description": "Aggiorna la configurazione dell'utente locale.",
+            "itemtype": "method",
+            "name": "update",
+            "params": [
+                {
+                    "name": "newUserConf",
+                    "description": "nuove caratteristiche dell'utente.",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "un oggetto di tipo <code>userConf</code> con le vecchie configurazioni.",
+                "type": "Object"
+            },
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 174,
+            "description": "Controlla che un oggetto <code>userConf</code> sia corretto.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "userConfValidator",
+            "params": [
+                {
+                    "name": "uc",
+                    "description": "oggetto <code>userConf</code> da controllare",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "<code>true</code> se l'oggetto è valido,\n                  <code>false</code> altrimenti.",
+                "type": "Boolean"
+            },
+            "class": "User",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 248,
+            "description": "Nome database remoto",
+            "itemtype": "attribute",
+            "name": "name",
+            "readonly": "",
+            "type": "string",
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 255,
+            "description": "Indirizzo IP o hostname del server remoto",
+            "itemtype": "attribute",
+            "name": "host",
+            "readonly": "",
+            "type": "string",
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 262,
+            "description": "Porta in ascolto del server remoto",
+            "itemtype": "attribute",
+            "name": "port",
+            "readonly": "",
+            "type": "number",
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 269,
+            "description": "Protocollo di comunicazione usato",
+            "itemtype": "attribute",
+            "name": "proto",
+            "readonly": "",
+            "type": "string",
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 276,
+            "description": "Amministratore del database remoto.",
+            "itemtype": "attribute",
+            "name": "admin",
+            "readonly": "",
+            "type": "Admin",
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 286,
+            "description": "Costruisce l'URL completo per raggiungere il server remoto.",
+            "itemtype": "method",
+            "name": "getURLServer",
+            "return": {
+                "description": "l'URL che punta al server remoto che gestisce i database",
+                "type": "String"
+            },
+            "example": [
+                "\n    \"http://127.0.0.1:5984\""
+            ],
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 298,
+            "description": "Costruisce l'URL completo per raggiungere il database sul server remoto.",
+            "itemtype": "method",
+            "name": "getURLDB",
+            "return": {
+                "description": "l'URL che punta al database sul server remoto",
+                "type": "String"
+            },
+            "example": [
+                "\n    \"http://127.0.0.1:5984/posts\""
+            ],
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 315,
+            "description": "Controlla che un oggetto <code>dbConf</code> sia corretto.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "dbConfValidator",
+            "params": [
+                {
+                    "name": "dbc",
+                    "description": "oggetto <code>dbConf</code> da controllare",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "<code>true</code> se l'oggetto è valido,\n                  <code>false</code> altrimenti.",
+                "type": "Boolean"
+            },
+            "class": "DB",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 380,
+            "description": "Codifica <code>base64</code> delle credenziali di accesso dell'amministratore del database remoto",
+            "itemtype": "attribute",
+            "name": "base64",
+            "readonly": "",
+            "type": "string",
+            "class": "Admin",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 394,
+            "description": "Controlla che un oggetto <code>adminConf</code> sia corretto.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "adminConfValidator",
+            "params": [
+                {
+                    "name": "dbc",
+                    "description": "oggetto <code>adminConf</code> da controllare",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "<code>true</code> se l'oggetto è valido,\n                  <code>false</code> altrimenti.",
+                "type": "Boolean"
+            },
+            "class": "Admin",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 490,
+            "description": "Database remoto",
+            "itemtype": "attribute",
+            "name": "db",
+            "readonly": "",
+            "type": "DB",
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 497,
+            "description": "Utente che utilizza il servizio",
+            "itemtype": "attribute",
+            "name": "user",
+            "readonly": "",
+            "type": "User",
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 507,
+            "description": "Chiede un particolare documento al database attraverso il suo identificatore\nunico interno al database.",
+            "itemtype": "method",
+            "name": "getDoc",
+            "params": [
+                {
+                    "name": "docId",
+                    "description": "identificatore unico del documento nel database",
+                    "type": "String"
+                },
+                {
+                    "name": "attachments",
+                    "description": "se <code>true</code> viene scaricato anche l'allegato.",
+                    "type": "Boolean"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 558,
+            "description": "Chiede tutti i documenti che sono relativi ad una certa area geografica rettangolare\ndefinita dalle coordinate dei vertici in basso a sinistra e in alto a destra.\n\nUn vertice quindi è un punto sulla mappa che deve essere rappresentato da un oggetto\nche deve avere 2 properties:\n<ul>\n    <li><b><code>lat</code></b> - <i>number</i>: compreso tra -90 e 90 che indica la latitudine <b>nord</b>\n    <li><b><code>lng</code></b> - <i>number</i>: compreso tra -180 e 180 che indica la longitudine <b>est</b>\n</ul>\nPer esempio:\n\n\tvar mapPoint = {\n\t\tlat: 43.720736,\n\t\tlng: 10.408392\n\t}",
+            "itemtype": "method",
+            "name": "getDocsInBox",
+            "params": [
+                {
+                    "name": "bl_corner",
+                    "description": "vertice in basso a sinistra dell'area della mappa interessata",
+                    "type": "Object"
+                },
+                {
+                    "name": "tr_corner",
+                    "description": "vertice in alto a destra dell'area della mappa interessate",
+                    "type": "Object"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 623,
+            "description": "Chiede al database tutti i documenti creati da un determinato utente indicando\nil suo identificatore unico.",
+            "itemtype": "method",
+            "name": "getUserDocs",
+            "params": [
+                {
+                    "name": "userId",
+                    "description": "identificatore unico dell'utente sul server",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 671,
+            "description": "Invia al server un nuovo documento",
+            "itemtype": "method",
+            "name": "postDoc",
+            "params": [
+                {
+                    "name": "doc",
+                    "description": "nuovo documento da inviare al server",
+                    "type": "Object"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 733,
+            "description": "Verifica se l'utente locale è già registrato sul server.",
+            "itemtype": "method",
+            "name": "checkRemoteUser",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 767,
+            "description": "Richiede al server di registrare l'utente locale",
+            "itemtype": "method",
+            "name": "signupRemoteUser",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 813,
+            "description": "Chiede al server di aggiornare il nickname e la e-mail dell'utente locale con\ndei nuovi valori. Se l'operazione riesce, vendono aggiornati anche i valori locali.",
+            "itemtype": "method",
+            "name": "updateRemoteUser",
+            "params": [
+                {
+                    "name": "user",
+                    "description": "oggetto <code>userConf</code> con i nuovi valori per\n                <b><code>nick</code></b> e <b><code>mail</code></b>. Le altre\n                properties vengono ignorate e possono essere anche omesse in\n                questo caso.",
+                    "type": "Object"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 893,
+            "description": "Chiede al server tutte le informazioni sull'utente locale",
+            "itemtype": "method",
+            "name": "getRemoteUser",
+            "params": [
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 933,
+            "description": "Controlla che un oggetto <code>georepConf</code> sia corretto.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "georepConfValidator",
+            "params": [
+                {
+                    "name": "gc",
+                    "description": "oggetto <code>georepConf</code> da controllare",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "<code>true</code> se l'oggetto è valido,\n                  <code>false</code> altrimenti.",
+                "type": "Boolean"
+            },
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 957,
+            "description": "Controlla che un oggetto che rappresenta un punto sulla mappa sia corretto.",
+            "access": "private",
+            "tagname": "",
+            "itemtype": "method",
+            "name": "mapPointValidator",
+            "params": [
+                {
+                    "name": "point",
+                    "description": "oggetto da controllare",
+                    "type": "Object"
+                }
+            ],
+            "return": {
+                "description": "<code>true</code> se l'oggetto è valido,\n                  <code>false</code> altrimenti.",
+                "type": "Boolean"
+            },
+            "class": "Georep",
+            "module": "georep"
+        }
+    ],
+    "warnings": []
+}
