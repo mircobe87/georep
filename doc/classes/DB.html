@@ -98,7 +98,7 @@
 
     
         <div class="foundat">
-            Defined in: <a href="../files/lib_georep.js.html#l206"><code>lib&#x2F;georep.js:206</code></a>
+            Defined in: <a href="../files/lib_georep.js.html#l225"><code>lib&#x2F;georep.js:225</code></a>
         </div>
     
 
@@ -196,7 +196,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l206"><code>lib&#x2F;georep.js:206</code></a>
+        <a href="../files/lib_georep.js.html#l225"><code>lib&#x2F;georep.js:225</code></a>
         
         </p>
 
@@ -270,6 +270,41 @@ var db = new DB( dbConf );</code></pre>
                         
                             <li class="index-item method private">
                                 <a href="#method_dbConfValidator">dbConfValidator</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getAdmin">getAdmin</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getHost">getHost</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getName">getName</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getPort">getPort</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
+                                <a href="#method_getProto">getProto</a>
 
                                 
                                 
@@ -381,7 +416,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l315"><code>lib&#x2F;georep.js:315</code></a>
+        <a href="../files/lib_georep.js.html#l379"><code>lib&#x2F;georep.js:379</code></a>
         
         </p>
 
@@ -443,6 +478,371 @@ var db = new DB( dbConf );</code></pre>
 </div>
 
                 
+                    <div id="method_getAdmin" class="method item">
+    <h3 class="name"><code>getAdmin</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type"><a href="../classes/Admin.html" class="crosslink">Admin</a></span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l341"><code>lib&#x2F;georep.js:341</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Ritorna l&#39;amministratore del database remoto</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type"><a href="../classes/Admin.html" class="crosslink">Admin</a></span>:
+                    
+                    <p>amministratore</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getHost" class="method item">
+    <h3 class="name"><code>getHost</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">String</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l314"><code>lib&#x2F;georep.js:314</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Ritorna lo hostname o l&#39;indirizzo IP dell&#39;host remoto</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">String</span>:
+                    
+                    <p>hostname o indirizzo IP</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getName" class="method item">
+    <h3 class="name"><code>getName</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">String</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l332"><code>lib&#x2F;georep.js:332</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Ritorna il nome del database remoto utilizzato</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">String</span>:
+                    
+                    <p>nome del database remoto</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getPort" class="method item">
+    <h3 class="name"><code>getPort</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">Number</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l323"><code>lib&#x2F;georep.js:323</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Ritorna il numero di porta usata nell&#39;invio delle richieste</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">Number</span>:
+                    
+                    <p>porta remota</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
+                    <div id="method_getProto" class="method item">
+    <h3 class="name"><code>getProto</code></h3>
+
+    
+        <span class="paren">()</span>
+    
+
+    
+        <span class="returns-inline">
+            <span class="type">String</span>
+        </span>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l305"><code>lib&#x2F;georep.js:305</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Ritorna il protocollo di comunicazione usato</p>
+
+    </div>
+
+    
+
+    
+        <div class="returns">
+            <h4>Returns:</h4>
+
+            <div class="returns-description">
+                
+                    
+                        <span class="type">String</span>:
+                    
+                    <p>protocollo</p>
+
+                
+            </div>
+        </div>
+    
+
+    
+</div>
+
+                
                     <div id="method_getURLDB" class="method item">
     <h3 class="name"><code>getURLDB</code></h3>
 
@@ -479,7 +879,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l298"><code>lib&#x2F;georep.js:298</code></a>
+        <a href="../files/lib_georep.js.html#l362"><code>lib&#x2F;georep.js:362</code></a>
         
         </p>
 
@@ -561,7 +961,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l286"><code>lib&#x2F;georep.js:286</code></a>
+        <a href="../files/lib_georep.js.html#l350"><code>lib&#x2F;georep.js:350</code></a>
         
         </p>
 
@@ -649,7 +1049,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l276"><code>lib&#x2F;georep.js:276</code></a>
+        <a href="../files/lib_georep.js.html#l295"><code>lib&#x2F;georep.js:295</code></a>
         
         </p>
 
@@ -703,7 +1103,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l255"><code>lib&#x2F;georep.js:255</code></a>
+        <a href="../files/lib_georep.js.html#l274"><code>lib&#x2F;georep.js:274</code></a>
         
         </p>
 
@@ -757,7 +1157,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l248"><code>lib&#x2F;georep.js:248</code></a>
+        <a href="../files/lib_georep.js.html#l267"><code>lib&#x2F;georep.js:267</code></a>
         
         </p>
 
@@ -811,7 +1211,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l262"><code>lib&#x2F;georep.js:262</code></a>
+        <a href="../files/lib_georep.js.html#l281"><code>lib&#x2F;georep.js:281</code></a>
         
         </p>
 
@@ -865,7 +1265,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l269"><code>lib&#x2F;georep.js:269</code></a>
+        <a href="../files/lib_georep.js.html#l288"><code>lib&#x2F;georep.js:288</code></a>
         
         </p>
 

@@ -176,13 +176,6 @@
 var User = function (userConf) {
 	if (userConfValidator(userConf)){
 		/**
-		 * Identificatore unico usato dal server per identificare questo utente dagli altri.
-		 * @attribute _id
-		 * @type string
-		 * @readOnly
-		 */
-		this._id = &#x27;org.couchdb.user:&#x27; + userConf.name;
-		/**
 		 * Username utilizzato per il login dell&#x27;utente sul server
 		 * @attribute name
 		 * @type string
@@ -196,22 +189,6 @@ var User = function (userConf) {
 		 * @readOnly
 		 */
 		this.password = userConf.password;
-		/**
-		 * Tipo dell&#x27;utente
-		 * @attribute type
-		 * @type string
-		 * @readOnly
-		 * @default &#x27;user&#x27;
-		 */
-		this.type = &#x27;user&#x27;;
-		/**
-		 * Ruoli dell&#x27;utente sul database
-		 * @readOnly
-		 * @attribute roles
-		 * @type array
-		 * @default []
-		 */
-		this.roles = [];
 		/**
 		 * Nick name usato dall&#x27;utente
 		 * @attribute nick
@@ -245,22 +222,64 @@ var User = function (userConf) {
  */
 User.prototype.update = function(newUserConf){
 	var oldUserConf = {
-		name: this.name,
-		password: this.password,
-		nick: this.nick,
-		mail: this.mail
+		name: this.getName(),
+		password: this.getPassword(),
+		nick: this.getNick(),
+		mail: this.getMail()
 	};
 	if (userConfValidator(newUserConf)){
-		this._id = &#x27;org.couchdb.user:&#x27; + newUserConf.name;
 		this.name = newUserConf.name;
 		this.password = newUserConf.password;
-		this.type = &#x27;user&#x27;;
-		this.roles = [];
 		this.nick = newUserConf.nick;
 		this.mail = newUserConf.mail;
 		this.base64 = Ti.Utils.base64encode(newUserConf.name + &#x27;:&#x27; + newUserConf.password).text;
 		return oldUserConf;
 	}
+};
+
+/**
+ * Ritorna il nome dell&#x27;utente usato per il login
+ * @method getName
+ * @return {string} nome dell&#x27;utente.
+ */
+User.prototype.getName = function(){
+	return this.name;
+};
+
+/**
+ * Ritorna la password di login dell&#x27;utente
+ * @method getPassword
+ * @return {string} password
+ */
+User.prototype.getPassword = function(){
+	return this.password;
+};
+
+/**
+ * Ritorna il nickname usato dell&#x27;utente
+ * @method getNick
+ * @return {string} nickname
+ */
+User.prototype.getNick = function(){
+	return this.nick;
+};
+
+/**
+ * Ritorna il contatto e-mail usato dall&#x27;utente
+ * @method getMail
+ * @return {string} indirizzo e-mail
+ */
+User.prototype.getMail = function(){
+	return this.mail;
+};
+
+/**
+ * Ritorna la codifica in &lt;code&gt;base64&lt;/code&gt; delle credenziali di autenticazione.
+ * @method getBase64
+ * @return {string} &#x27;name:password&#x27; in &lt;code&gt;base64&lt;/code&gt;
+ */
+User.prototype.getBase64 = function(){
+	return this.base64;
 };
 
 exports.User = User;
@@ -380,6 +399,51 @@ var DB = function (dbConf) {
 };
 
 /**
+ * Ritorna il protocollo di comunicazione usato
+ * @method getProto
+ * @return {string} protocollo 
+ */
+DB.prototype.getProto = function() {
+	return this.proto;
+};
+
+/**
+ * Ritorna lo hostname o l&#x27;indirizzo IP dell&#x27;host remoto
+ * @method getHost
+ * @return {string} hostname o indirizzo IP 
+ */
+DB.prototype.getHost = function() {
+	return this.host;
+};
+
+/**
+ * Ritorna il numero di porta usata nell&#x27;invio delle richieste
+ * @method getPort
+ * @return {number} porta remota 
+ */
+DB.prototype.getPort = function() {
+	return this.port;
+};
+
+/**
+ * Ritorna il nome del database remoto utilizzato
+ * @method getName
+ * @return {string} nome del database remoto 
+ */
+DB.prototype.getName = function() {
+	return this.name;
+};
+
+/**
+ * Ritorna l&#x27;amministratore del database remoto
+ * @method getAdmin
+ * @return {Admin} amministratore 
+ */
+DB.prototype.getAdmin = function() {
+	return this.admin;
+};
+
+/**
  * Costruisce l&#x27;URL completo per raggiungere il server remoto.
  *
  * @method getURLServer
@@ -388,7 +452,7 @@ var DB = function (dbConf) {
  *     &quot;http://127.0.0.1:5984&quot;
  */
 DB.prototype.getURLServer = function(){
-	return this.proto + &#x27;://&#x27; + this.host + &#x27;:&#x27; + this.port;
+	return this.getProto() + &#x27;://&#x27; + this.getHost() + &#x27;:&#x27; + this.getPort();
 };
 
 /**
@@ -400,7 +464,7 @@ DB.prototype.getURLServer = function(){
  *     &quot;http://127.0.0.1:5984/posts&quot;
  */
 DB.prototype.getURLDB = function(){
-	return this.proto + &#x27;://&#x27; + this.host + &#x27;:&#x27; + this.port + &#x27;/&#x27; + this.name;
+	return this.getProto() + &#x27;://&#x27; + this.getHost() + &#x27;:&#x27; + this.getPort() + &#x27;/&#x27; + this.getName();
 };
 
 exports.DB = DB;
@@ -480,6 +544,16 @@ var Admin = function (adminConf) {
 		 * @type string
 		 */
 		this.base64 = Ti.Utils.base64encode(adminConf.name + &#x27;:&#x27; + adminConf.password).text;
+};
+
+/**
+ * Ritorna le credenziali di accesso dell&#x27;amministratore codificate in
+ * &lt;code&gt;base64&lt;/code&gt;.
+ * @method getBase64
+ * @return {string} &#x27;name:password&#x27; in &lt;code&gt;base64&lt;/code&gt;
+ */
+Admin.prototype.getBase64 = function() {
+	return this.base64;
 };
 
 exports.Admin = Admin;
@@ -591,13 +665,60 @@ var Georep = function (georepConf) {
 		 */
 		this.db = georepConf.db;
 		/**
-		 * Utente che utilizza il servizio
+		 * Insieme di informazioni sull&#x27;utente che utilizza il servizio.&lt;br&gt;
+		 * Sono organizzate in un oggetto con le seguenti properies:
+		 * &lt;ul&gt;
+		 *     &lt;li&gt;&lt;b&gt;&lt;code&gt;localData&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;User&lt;/i&gt;: informazioni locali dell&#x27;utente.&lt;/li&gt;
+		 *     &lt;li&gt;&lt;b&gt;&lt;code&gt;remoteData&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;object&lt;/i&gt;: informazioni remote dell&#x27;utente che utilizza il servizio.&lt;br&gt;
+		 *         Sono organizzate in un oggetto con le seguenti properies:
+		 *         &lt;ul&gt;
+		 *             &lt;li&gt;&lt;b&gt;&lt;code&gt;_id&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: stringa con cui il server identifica l&#x27;utente locale&lt;/li&gt;
+		 *             &lt;li&gt;&lt;b&gt;&lt;code&gt;type&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: tipologia dell&#x27;utente&lt;/li&gt;
+		 *             &lt;li&gt;&lt;b&gt;&lt;code&gt;roles&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;array&lt;/i&gt;: ruoli di questo utente sul database&lt;/li&gt;
+		 *         &lt;/ul&gt;
+		 *     &lt;/li&gt;
+		 * &lt;/ul&gt;
 		 * @attribute user
 		 * @readOnly
-		 * @type User
+		 * @type object
 		 */
-		this.user = georepConf.user;
+		this.user = {
+			localData:  georepConf.user,
+			remoteData: {
+				_id: &#x27;org.couchdb.user:&#x27; + georepConf.user.getName(),
+				type: &#x27;user&#x27;,
+				roles: []
+			}
+		};
 	}
+};
+
+/**
+ * Ritorna l&#x27;utente locale usato
+ * @method getUser
+ * @return {User} utente locale
+ */
+Georep.prototype.getUser = function() {
+	return this.user.localData;
+};
+
+/**
+ * Ritorna il database remoto utilizzato
+ * @method getDb
+ * @return {DB} database remoto
+ */
+Georep.prototype.getDb = function() {
+	return this.db;
+};
+
+/**
+ * Ritorna identificatore unico dell&#x27;utente locale usato nel server
+ *
+ * @method getUserId
+ * @return {string} ID dell&#x27;utente.
+ */
+Georep.prototype.getUserId = function(){
+	return this.user.remoteData._id;
 };
 
 /**
@@ -642,7 +763,7 @@ Georep.prototype.getDoc = function(docId, attachments, callback){
 		});
 		
 		client.open(&quot;GET&quot;, url);
-		client.setRequestHeader(&quot;Authorization&quot;, &quot;Basic &quot; + this.user.base64);
+		client.setRequestHeader(&quot;Authorization&quot;, &quot;Basic &quot; + this.getUser().getBase64());
 		
 		// mi assicura che la risposta arrivi con l&#x27;allegato in base64
 		// invece che in binario in un oggetto MIME a contenuti multipli
@@ -697,7 +818,7 @@ Georep.prototype.getDocsInBox = function(bl_corner, tr_corner, callback){
 		                bl_corner.lng + &#x27;,&#x27; + bl_corner.lat + &#x27;,&#x27; +
 		                tr_corner.lng + &#x27;,&#x27; + tr_corner.lat;
 		                
-		var url = this.db.getURLDB() + &#x27;/_design/&#x27; + viewPath + queryOpts;
+		var url = this.getDb().getURLDB() + &#x27;/_design/&#x27; + viewPath + queryOpts;
 		
 		var client = Ti.Network.createHTTPClient({
 			onload: function(data){
@@ -710,7 +831,7 @@ Georep.prototype.getDocsInBox = function(bl_corner, tr_corner, callback){
 			}
 		});
 		client.open(&quot;GET&quot;, url);
-		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getUser().getBase64());
 		client.setRequestHeader(&quot;Accept&quot;, &#x27;application/json&#x27;);
 		client.send();
 	}
@@ -746,7 +867,7 @@ Georep.prototype.getUserDocs = function(userId, callback){
 			args: arguments
 		};
 	else {
-		var url = this.db.getURLDB() + &#x27;/_design/&#x27; + viewPath + queryOpts;
+		var url = this.getDb().getURLDB() + &#x27;/_design/&#x27; + viewPath + queryOpts;
 		var client = Ti.Network.createHTTPClient({
 			onload: function(data){
 				if(callback)
@@ -758,7 +879,7 @@ Georep.prototype.getUserDocs = function(userId, callback){
 			}
 		});
 		client.open(&quot;GET&quot;, url);
-		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getUser().getBase64());
 		client.setRequestHeader(&quot;Accept&quot;, &#x27;application/json&#x27;);
 		client.send();
 	}
@@ -799,18 +920,18 @@ Georep.prototype.postDoc = function(doc,callback){
 		}
 		else {
 			var newDoc = {};
-			newDoc.userId = this.user._id;
+			newDoc.userId = this.getUserId();
 			newDoc.title = doc.title;
 			newDoc.msg = doc.msg;
 			newDoc.loc = doc.loc;
 			newDoc._attachments = {
 				img: doc.img
 			};
-			var url = this.db.getURLDB();
+			var url = this.getDb().getURLDB();
 			var client = Ti.Network.createHTTPClient({
 				onload: function(data){
 					if(callback)
-						callback(undefined,data);
+						callback(undefined,this.responseText);
 				},
 				error: function(e){
 					if(callback)
@@ -819,7 +940,7 @@ Georep.prototype.postDoc = function(doc,callback){
 			});
 			client.open(&quot;POST&quot;, url);
 			
-			client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+			client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getUser().getBase64());
 			client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
 			
 			client.send(JSON.stringify(newDoc));
@@ -841,7 +962,7 @@ Georep.prototype.checkRemoteUser = function(callback){
 	} else {
 		// richiedo info sul db, usando come credenziali di accesso quelle dell&#x27;utente locale, 
 		// se l&#x27;accesso al db viene negato, significa che l&#x27;utente non è registrato
-		var url = this.db.getURLServer();
+		var url = this.getDb().getURLServer();
 		var client = Ti.Network.createHTTPClient({
 			onload: function(data){
 				callback(undefined, {isRegistered: true});
@@ -855,7 +976,7 @@ Georep.prototype.checkRemoteUser = function(callback){
 			}
 		});
 		client.open(&quot;GET&quot;, url);
-		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getUser().getBase64());
 		client.send();
 	}
 };
@@ -872,13 +993,13 @@ Georep.prototype.signupRemoteUser = function(callback){
 						args: arguments
 					};
 	} else {
-		var url = this.db.getURLServer() + &#x27;/_users/&#x27; + this.user._id;
-		Ti.API.debug(url);		  
+		var url = this.getDb().getURLServer() + &#x27;/_users/&#x27; + this.getUserId();
+		// Ti.API.debug(url);		  
 		var client = Ti.Network.createHTTPClient({
 			onload: function(data){
 				// console.log(&quot;Utente registrato con successo! &quot; +data);
 				if (callback) {
-					callback(undefined, data);
+					callback(undefined, this.responseText);
 				}
 			},
 			onerror: function(e){
@@ -890,16 +1011,16 @@ Georep.prototype.signupRemoteUser = function(callback){
 		});
 		client.open(&quot;PUT&quot;, url);
 		
-		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.db.admin.base64);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getDb().getAdmin().getBase64());
 		client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
 		
 		var usersignup = {
-			 name: this.user.name,
-			 password: this.user.password,
-			 nick: this.user.nick,
-			 mail: this.user.mail,
-			 type: this.user.type,
-			 roles: this.user.roles
+			 name: this.getUser().getName(),
+			 password: this.getUser().getPassword(),
+			 nick: this.getUser().getNick(),
+			 mail: this.getUser().getMail(),
+			 type: &#x27;user&#x27;,
+			 roles: []
 		};
 		client.send(JSON.stringify(usersignup));
 		
@@ -910,26 +1031,26 @@ Georep.prototype.signupRemoteUser = function(callback){
  * Chiede al server di aggiornare il nickname e la e-mail dell&#x27;utente locale con
  * dei nuovi valori. Se l&#x27;operazione riesce, vendono aggiornati anche i valori locali.
  * @method updateRemoteUser
- * @param {object} user oggetto &lt;code&gt;userConf&lt;/code&gt; con i nuovi valori per
+ * @param {object} userConf oggetto &lt;code&gt;userConf&lt;/code&gt; con i nuovi valori per
  *                 &lt;b&gt;&lt;code&gt;nick&lt;/code&gt;&lt;/b&gt; e &lt;b&gt;&lt;code&gt;mail&lt;/code&gt;&lt;/b&gt;. Le altre
  *                 properties vengono ignorate e possono essere anche omesse in
  *                 questo caso.
  * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
  */
-Georep.prototype.updateRemoteUser = function(user, callback){
+Georep.prototype.updateRemoteUser = function(userConf, callback){
 	if (arguments.length &lt; 1){
 		throw {
 			error: &#x27;update() richiede un argomento: user (object).&#x27;,
 			args: arguments
 		};
-	} else if (typeof user != &#x27;object&#x27;) {
+	} else if (typeof userConf != &#x27;object&#x27;) {
 		throw {
 			error: &#x27;Impossibile aggiornare l\&#x27;utente, parametro non valido.&#x27;,
 			args: arguments
 		};
 	} else if (
-	!user.nick      || typeof user.nick      != &#x27;string&#x27; ||
-	!user.mail      || typeof user.mail      != &#x27;string&#x27; ){
+	!userConf.nick      || typeof userConf.nick      != &#x27;string&#x27; ||
+	!userConf.mail      || typeof userConf.mail      != &#x27;string&#x27; ){
 		throw {
 			error: &#x27;Impossibile settare &quot;user&quot;, uno o piu\&#x27; properties non valide.&#x27;,
 			args: arguments
@@ -940,29 +1061,29 @@ Georep.prototype.updateRemoteUser = function(user, callback){
 			args: arguments
 		};
 	} else {
-		var tmpService = this; // serve perchè dentro la funzione di callback this è window anziché Georep
+		var tmpService = this; // serve perché dentro la funzione di callback this è window anziché Georep
 		this.getRemoteUser(function(err,data){					
 			if(!err){
 				var rev = JSON.parse(data)._rev;
-				var url = tmpService.db.getURLServer() + &#x27;/_users/&#x27; + tmpService.user._id +
+				var url = tmpService.getDb().getURLServer() + &#x27;/_users/&#x27; + tmpService.getUserId() +
 					  &#x27;?rev=&#x27; + rev;
 					  
 				var newLocalUser = {
-					name: tmpService.user.name,
-					password: tmpService.user.password,
-					nick: user.nick,
-					mail: user.mail
+					name: tmpService.getUser().getName(),
+					password: tmpService.getUser().getPassword(),
+					nick: userConf.nick,
+					mail: userConf.mail
 				};
 				var newRemoteUser = newLocalUser;
-				newRemoteUser.type = tmpService.user.type;
-				newRemoteUser.roles = tmpService.user.roles;
-				newRemoteUser._id = tmpService.user._id;
+				newRemoteUser.type = &#x27;user&#x27;;
+				newRemoteUser.roles = [];
+				newRemoteUser._id = tmpService.getUserId();
 
 				var client = Ti.Network.createHTTPClient({
 					onload: function(data){
-						tmpService.user.update(newLocalUser);
+						tmpService.getUser().update(newLocalUser);
 						if (callback) {
-							callback(undefined, data);
+							callback(undefined, this.responseText);
 						}
 					},
 					onerror: function(e){
@@ -973,7 +1094,7 @@ Georep.prototype.updateRemoteUser = function(user, callback){
 				});
 				client.open(&quot;PUT&quot;, url);
 		
-				client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + tmpService.db.admin.base64);
+				client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + tmpService.getDb().getAdmin().getBase64());
 				client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
 				
 				client.send(JSON.stringify(newRemoteUser));
@@ -1003,7 +1124,7 @@ Georep.prototype.getRemoteUser = function(callback){
 			args: arguments
 		};
 	} else {
-		var url = this.db.getURLServer() + &#x27;/_users/&#x27; + this.user._id;
+		var url = this.getDb().getURLServer() + &#x27;/_users/&#x27; + this.getUserId();
 		var client = Ti.Network.createHTTPClient({
 			onload: function(data){
 				callback(undefined, this.responseText);
@@ -1014,7 +1135,7 @@ Georep.prototype.getRemoteUser = function(callback){
 		});
 		client.open(&quot;GET&quot;, url);
 		
-		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.user.base64);
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getUser().getBase64());
 		client.setRequestHeader(&quot;Accept&quot;, &#x27;application/json&#x27;);
 		
 		client.send();
