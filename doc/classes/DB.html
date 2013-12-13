@@ -41,8 +41,6 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Admin.html">Admin</a></li>
-            
                 <li><a href="../classes/DB.html">DB</a></li>
             
                 <li><a href="../classes/Georep.html">Georep</a></li>
@@ -122,9 +120,7 @@
     Per poter comunicare con il database remoto bisogna specificare il protocollo
     impiegato, l&#39;indirizzo IP o hostname del macchina che ospita il servizio, il
     numero di porta sulla quale il server è in ascolto in attesa di connessioni e
-    il nome del database sul quale di vuole operare; Per il momento è necessario
-    fornire anche un amministratore del database se si vuole registrare un nuovo
-    utente.
+    il nome del database sul quale di vuole operare;
 </p>
 <p>
     Per istanziare un nuovo database bisogna definire prima un oggetto <b><code>dbConf</code></b>
@@ -134,17 +130,15 @@
         <li><b><code>host</code></b> - <i>string</i>: IP o hostname della macchina remota
         <li><b><code>port</code></b> - <i>number</i>: numero della porta remota in ascolto
         <li><b><code>name</code></b> - <i>string</i>: nome del database remoto
-        <li><b><code>admin</code></b> - <i>Admin</i>: istanza di un oggetto <a href="../classes/Admin.html" class="crosslink">Admin</a>
     </ul>
 </p>
 <h3>Esempio:</h3>
 
 <pre class="code prettyprint"><code>var dbConf = {
-    proto: "http",
-    host: "127.0.0.1",
+    proto: &quot;http&quot;,
+    host: &quot;127.0.0.1&quot;,
     port: 5984,
-    name: "posts",
-    admin: new Admin( adminConf )
+    name: &quot;posts&quot;
 };
 
 var db = new DB( dbConf );</code></pre>
@@ -276,13 +270,6 @@ var db = new DB( dbConf );</code></pre>
                             </li>
                         
                             <li class="index-item method">
-                                <a href="#method_getAdmin">getAdmin</a>
-
-                                
-                                
-                            </li>
-                        
-                            <li class="index-item method">
                                 <a href="#method_getHost">getHost</a>
 
                                 
@@ -335,10 +322,6 @@ var db = new DB( dbConf );</code></pre>
                     <h3>Attributes</h3>
 
                     <ul class="index-list attrs">
-                        
-                            <li class="index-item attr">
-                                <a href="#attr_admin">admin</a>
-                            </li>
                         
                             <li class="index-item attr">
                                 <a href="#attr_host">host</a>
@@ -416,7 +399,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l379"><code>lib&#x2F;georep.js:379</code></a>
+        <a href="../files/lib_georep.js.html#l359"><code>lib&#x2F;georep.js:359</code></a>
         
         </p>
 
@@ -478,79 +461,6 @@ var db = new DB( dbConf );</code></pre>
 </div>
 
                 
-                    <div id="method_getAdmin" class="method item">
-    <h3 class="name"><code>getAdmin</code></h3>
-
-    
-        <span class="paren">()</span>
-    
-
-    
-        <span class="returns-inline">
-            <span class="type"><a href="../classes/Admin.html" class="crosslink">Admin</a></span>
-        </span>
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/lib_georep.js.html#l341"><code>lib&#x2F;georep.js:341</code></a>
-        
-        </p>
-
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Ritorna l&#39;amministratore del database remoto</p>
-
-    </div>
-
-    
-
-    
-        <div class="returns">
-            <h4>Returns:</h4>
-
-            <div class="returns-description">
-                
-                    
-                        <span class="type"><a href="../classes/Admin.html" class="crosslink">Admin</a></span>:
-                    
-                    <p>amministratore</p>
-
-                
-            </div>
-        </div>
-    
-
-    
-</div>
-
-                
                     <div id="method_getHost" class="method item">
     <h3 class="name"><code>getHost</code></h3>
 
@@ -587,7 +497,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l314"><code>lib&#x2F;georep.js:314</code></a>
+        <a href="../files/lib_georep.js.html#l303"><code>lib&#x2F;georep.js:303</code></a>
         
         </p>
 
@@ -660,7 +570,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l332"><code>lib&#x2F;georep.js:332</code></a>
+        <a href="../files/lib_georep.js.html#l321"><code>lib&#x2F;georep.js:321</code></a>
         
         </p>
 
@@ -733,7 +643,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l323"><code>lib&#x2F;georep.js:323</code></a>
+        <a href="../files/lib_georep.js.html#l312"><code>lib&#x2F;georep.js:312</code></a>
         
         </p>
 
@@ -806,7 +716,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l305"><code>lib&#x2F;georep.js:305</code></a>
+        <a href="../files/lib_georep.js.html#l294"><code>lib&#x2F;georep.js:294</code></a>
         
         </p>
 
@@ -879,7 +789,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l362"><code>lib&#x2F;georep.js:362</code></a>
+        <a href="../files/lib_georep.js.html#l342"><code>lib&#x2F;georep.js:342</code></a>
         
         </p>
 
@@ -961,7 +871,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l350"><code>lib&#x2F;georep.js:350</code></a>
+        <a href="../files/lib_georep.js.html#l330"><code>lib&#x2F;georep.js:330</code></a>
         
         </p>
 
@@ -1017,60 +927,6 @@ var db = new DB( dbConf );</code></pre>
                 <h2 class="off-left">Attributes</h2>
 
                 
-                    <div id="attr_admin" class="attr item">
-    <a name="config_admin"></a> 
-    <h3 class="name"><code>admin</code></h3>
-    <span class="type"><a href="../classes/Admin.html" class="crosslink">Admin</a></span>
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-
-    
-        <span class="flag readonly">readonly</span>
-    
-
-    <div class="meta">
-        
-            
-                
-                <p>
-                
-                Defined in
-                
-            
-        
-        
-        <a href="../files/lib_georep.js.html#l295"><code>lib&#x2F;georep.js:295</code></a>
-        
-        </p>
-
-        
-
-        
-    </div>
-
-    <div class="description">
-        <p>Amministratore del database remoto.</p>
-
-    </div>
-
-    
-
-    
-
-    
-</div>
-
-                
                     <div id="attr_host" class="attr item">
     <a name="config_host"></a> 
     <h3 class="name"><code>host</code></h3>
@@ -1103,7 +959,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l274"><code>lib&#x2F;georep.js:274</code></a>
+        <a href="../files/lib_georep.js.html#l270"><code>lib&#x2F;georep.js:270</code></a>
         
         </p>
 
@@ -1157,7 +1013,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l267"><code>lib&#x2F;georep.js:267</code></a>
+        <a href="../files/lib_georep.js.html#l263"><code>lib&#x2F;georep.js:263</code></a>
         
         </p>
 
@@ -1211,7 +1067,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l281"><code>lib&#x2F;georep.js:281</code></a>
+        <a href="../files/lib_georep.js.html#l277"><code>lib&#x2F;georep.js:277</code></a>
         
         </p>
 
@@ -1265,7 +1121,7 @@ var db = new DB( dbConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l288"><code>lib&#x2F;georep.js:288</code></a>
+        <a href="../files/lib_georep.js.html#l284"><code>lib&#x2F;georep.js:284</code></a>
         
         </p>
 

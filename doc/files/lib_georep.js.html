@@ -41,8 +41,6 @@
         <div id="api-tabview-panel">
             <ul id="api-classes" class="apis classes">
             
-                <li><a href="../classes/Admin.html">Admin</a></li>
-            
                 <li><a href="../classes/DB.html">DB</a></li>
             
                 <li><a href="../classes/Georep.html">Georep</a></li>
@@ -327,9 +325,7 @@ var userConfValidator = function (uc) {
 	Per poter comunicare con il database remoto bisogna specificare il protocollo
 	impiegato, l&#x27;indirizzo IP o hostname del macchina che ospita il servizio, il
 	numero di porta sulla quale il server è in ascolto in attesa di connessioni e
-	il nome del database sul quale di vuole operare; Per il momento è necessario
-	fornire anche un amministratore del database se si vuole registrare un nuovo
-	utente.
+	il nome del database sul quale di vuole operare;
 &lt;/p&gt;
 &lt;p&gt;
 	Per istanziare un nuovo database bisogna definire prima un oggetto &lt;b&gt;&lt;code&gt;dbConf&lt;/code&gt;&lt;/b&gt;
@@ -339,7 +335,6 @@ var userConfValidator = function (uc) {
 		&lt;li&gt;&lt;b&gt;&lt;code&gt;host&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: IP o hostname della macchina remota
 		&lt;li&gt;&lt;b&gt;&lt;code&gt;port&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;number&lt;/i&gt;: numero della porta remota in ascolto
 		&lt;li&gt;&lt;b&gt;&lt;code&gt;name&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: nome del database remoto
-		&lt;li&gt;&lt;b&gt;&lt;code&gt;admin&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;Admin&lt;/i&gt;: istanza di un oggetto {{#crossLink &quot;Admin&quot;}}{{/crossLink}}
 	&lt;/ul&gt;
 &lt;/p&gt;
 &lt;h3&gt;Esempio:&lt;/h3&gt;
@@ -348,8 +343,7 @@ var userConfValidator = function (uc) {
 		proto: &quot;http&quot;,
 		host: &quot;127.0.0.1&quot;,
 		port: 5984,
-		name: &quot;posts&quot;,
-		admin: new Admin( adminConf )
+		name: &quot;posts&quot;
 	};
 	
 	var db = new DB( dbConf );
@@ -388,13 +382,6 @@ var DB = function (dbConf) {
 		 * @type string
 		 */
 		this.proto = dbConf.proto;
-		/**
-		 * Amministratore del database remoto.
-		 * @attribute admin
-		 * @readonly
-		 * @type Admin
-		 */
-		this.admin = dbConf.admin;
 	}
 };
 
@@ -432,15 +419,6 @@ DB.prototype.getPort = function() {
  */
 DB.prototype.getName = function() {
 	return this.name;
-};
-
-/**
- * Ritorna l&#x27;amministratore del database remoto
- * @method getAdmin
- * @return {Admin} amministratore 
- */
-DB.prototype.getAdmin = function() {
-	return this.admin;
 };
 
 /**
@@ -489,7 +467,6 @@ var dbConfValidator = function (dbc) {
 	else if (!dbc.name  || typeof dbc.name  != &#x27;string&#x27;   ||
 	         !dbc.host  || typeof dbc.host  != &#x27;string&#x27;   ||
 	         !dbc.proto || typeof dbc.proto != &#x27;string&#x27;   ||
-	         !dbc.admin || !(dbc.admin instanceof Admin)  ||
 	         !dbc.port  || typeof dbc.port  != &#x27;number&#x27;   || dbc.port &lt;= 0 || dbc.port &gt;= 65536)
 		throw {
 			error: &#x27;some dbConf properties are invalid&#x27;,
@@ -499,91 +476,6 @@ var dbConfValidator = function (dbc) {
 		return true;
 };
 
-
-
-
-// -- ADMIN --------------------------------------------------------------------
-
-
-/**
-&lt;h3&gt;Admin&lt;/h3&gt;
-&lt;p&gt;
-	Definisce l&#x27;amministratore del database remoto.
-&lt;/p&gt;
-&lt;p&gt;
-	Per poter registrare un nuovo utente sul database è necessario operare come
-	amministratore quindi bisogna fornire le credenziali di amministrazione.
-&lt;/p&gt;
-&lt;p&gt;
-	Per istanziare un nuovo amministratore bisogna definire prima un oggetto &lt;b&gt;&lt;code&gt;adminConf&lt;/code&gt;&lt;/b&gt;
-	che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
-	&lt;ul&gt;
-		&lt;li&gt;&lt;b&gt;&lt;code&gt;name&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: username dell&#x27;amministratore
-		&lt;li&gt;&lt;b&gt;&lt;code&gt;password&lt;/code&gt;&lt;/b&gt; - &lt;i&gt;string&lt;/i&gt;: password dell&#x27;amministratore
-	&lt;/ul&gt;
-&lt;/p&gt;
-&lt;h3&gt;Esempio:&lt;/h3&gt;
-
-	var adminConf = {
-		name: &quot;admin&quot;,
-		password: &quot;1234&quot;
-	};
-	
-	var admin = new Admin( adminConf );
-
-@class Admin
-@constructor
-@param {object} adminConf specifica tutte le informazioni del nuovo amministratore.
-*/
-var Admin = function (adminConf) {
-	if (adminConfValidator(adminConf))
-		/**
-		 * Codifica &lt;code&gt;base64&lt;/code&gt; delle credenziali di accesso dell&#x27;amministratore del database remoto
-		 * @attribute base64
-		 * @readOnly
-		 * @type string
-		 */
-		this.base64 = Ti.Utils.base64encode(adminConf.name + &#x27;:&#x27; + adminConf.password).text;
-};
-
-/**
- * Ritorna le credenziali di accesso dell&#x27;amministratore codificate in
- * &lt;code&gt;base64&lt;/code&gt;.
- * @method getBase64
- * @return {string} &#x27;name:password&#x27; in &lt;code&gt;base64&lt;/code&gt;
- */
-Admin.prototype.getBase64 = function() {
-	return this.base64;
-};
-
-exports.Admin = Admin;
-
-// -- Funzioni ausiliare per ADMIN
-
-
-/**
- * Controlla che un oggetto &lt;code&gt;adminConf&lt;/code&gt; sia corretto.
- * @private
- * @method adminConfValidator
- * @param {object} dbc oggetto &lt;code&gt;adminConf&lt;/code&gt; da controllare
- * @return {boolean} &lt;code&gt;true&lt;/code&gt; se l&#x27;oggetto è valido,
- *                   &lt;code&gt;false&lt;/code&gt; altrimenti.
- */
-var adminConfValidator = function (ac) {
-	if (!ac)
-		throw {
-			error: &#x27;a adminConf object is required&#x27;,
-			adminConf: ac
-		};
-	else if (!ac.name      || typeof ac.name      != &#x27;string&#x27; ||
-	         !ac.password  || typeof ac.password  != &#x27;string&#x27;  )
-		throw {
-			error: &#x27;some adminConf properties are invalid&#x27;,
-			georepConf: ac
-		};
-	else
-		return true;
-};
 
 
 
@@ -993,8 +885,8 @@ Georep.prototype.signupRemoteUser = function(callback){
 						args: arguments
 					};
 	} else {
-		var url = this.getDb().getURLServer() + &#x27;/_users/&#x27; + this.getUserId();
-		// Ti.API.debug(url);		  
+	
+		var url = makeSignupUrlRequest(this);
 		var client = Ti.Network.createHTTPClient({
 			onload: function(data){
 				// console.log(&quot;Utente registrato con successo! &quot; +data);
@@ -1009,12 +901,14 @@ Georep.prototype.signupRemoteUser = function(callback){
 				}
 			}
 		});
-		client.open(&quot;PUT&quot;, url);
 		
-		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getDb().getAdmin().getBase64());
+		client.open(&#x27;POST&#x27;, url);
+		
+		client.setRequestHeader(&quot;Authorization&quot;, &#x27;Basic &#x27; + this.getUser().getBase64());
 		client.setRequestHeader(&quot;Content-Type&quot;, &quot;application/json&quot;);
 		
 		var usersignup = {
+			_id: this.getUserId(),
 			 name: this.getUser().getName(),
 			 password: this.getUser().getPassword(),
 			 nick: this.getUser().getNick(),
@@ -1185,7 +1079,23 @@ var mapPointValidator = function (point) {
 	!point.lat || typeof point.lat != &#x27;number&#x27;|| point.lat &lt;  -90 || point.lat &gt;  90  );
 };
 
-
+/**
+ * Prepara il giusto url da usare per l&#x27;invio di una richiesta di registrazione dell&#x27;utente locale.
+ * @private
+ * @method makeSignupUrlRequest
+ * @param {Object} georepObj istanza dell&#x27;oggetto Georep che usa la funzione.
+ * @return {String} URL al quale inviare la richiesta; viene inviata al server couchdb se &lt;b&gt;non&lt;/b&gt; siamo
+ * in appMode, altrimenti viene inviata al server nodeJS che controlla la registrazione.
+ */
+var makeSignupUrlRequest = function (georepObj) {
+	if (constants.appMode) {
+		return constants.nodeJsServer.proto + &#x27;://&#x27; +
+		       (constants.nodeJsServer.ip ? constants.nodeJsServer.ip : georepObj.getDb().getHost()) + &#x27;:&#x27; +
+		       constants.nodeJsServer.port + &#x27;/_users&#x27;;
+	}else{
+		return georepObj.getDb().getURLServer() + &#x27;/_users&#x27;;
+	}
+};
 
 // -- COSTANTI utilizzate nel resto del codice ---------------------------------
 
@@ -1205,7 +1115,17 @@ var constants = {
 				}
 			]
 		}
-	]
+	],
+	// specifica se il modulo è utilizzato nella app o nel server node.js
+	appMode: true,
+	// se appMode == true allora queste info sono utilizzate per comporre l&#x27;URL
+	// utilizzato nell&#x27;invio delle richieste di signup 
+	nodeJsServer: {
+		proto: &#x27;http&#x27;,
+		// se ip == undefined viene usato l&#x27;ip specificato nell&#x27;istanza di DB usata nell&#x27;istanza di georep
+		ip: undefined,
+		port: 1337
+	}
 };
 
 
