@@ -1081,20 +1081,16 @@ var mapPointValidator = function (point) {
 
 /**
  * Prepara il giusto url da usare per l&#x27;invio di una richiesta di registrazione dell&#x27;utente locale.
+ * Per comporre l&#x27;URL usa le informazioni sul server NodeJS specificate nelle costanti.
  * @private
  * @method makeSignupUrlRequest
  * @param {Object} georepObj istanza dell&#x27;oggetto Georep che usa la funzione.
- * @return {String} URL al quale inviare la richiesta; viene inviata al server couchdb se &lt;b&gt;non&lt;/b&gt; siamo
- * in appMode, altrimenti viene inviata al server nodeJS che controlla la registrazione.
+ * @return {String} URL al quale inviare la richiesta.
  */
 var makeSignupUrlRequest = function (georepObj) {
-	if (constants.appMode) {
-		return constants.nodeJsServer.proto + &#x27;://&#x27; +
-		       (constants.nodeJsServer.ip ? constants.nodeJsServer.ip : georepObj.getDb().getHost()) + &#x27;:&#x27; +
-		       constants.nodeJsServer.port + &#x27;/_users&#x27;;
-	}else{
-		return georepObj.getDb().getURLServer() + &#x27;/_users&#x27;;
-	}
+	return constants.nodeJsServer.proto + &#x27;://&#x27; +
+		   (constants.nodeJsServer.ip ? constants.nodeJsServer.ip : georepObj.getDb().getHost()) + &#x27;:&#x27; +
+		   constants.nodeJsServer.port + &#x27;/_users&#x27;;
 };
 
 // -- COSTANTI utilizzate nel resto del codice ---------------------------------
@@ -1116,10 +1112,8 @@ var constants = {
 			]
 		}
 	],
-	// specifica se il modulo è utilizzato nella app o nel server node.js
-	appMode: true,
-	// se appMode == true allora queste info sono utilizzate per comporre l&#x27;URL
-	// utilizzato nell&#x27;invio delle richieste di signup 
+	// queste info sono utilizzate per comporre l&#x27;URL utilizzato nell&#x27;invio
+	// delle richieste di signup 
 	nodeJsServer: {
 		proto: &#x27;http&#x27;,
 		// se ip == undefined viene usato l&#x27;ip specificato nell&#x27;istanza di DB usata nell&#x27;istanza di georep

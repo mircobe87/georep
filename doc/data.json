@@ -684,7 +684,7 @@
         {
             "file": "lib/georep.js",
             "line": 988,
-            "description": "Prepara il giusto url da usare per l'invio di una richiesta di registrazione dell'utente locale.",
+            "description": "Prepara il giusto url da usare per l'invio di una richiesta di registrazione dell'utente locale.\nPer comporre l'URL usa le informazioni sul server NodeJS specificate nelle costanti.",
             "access": "private",
             "tagname": "",
             "itemtype": "method",
@@ -697,7 +697,7 @@
                 }
             ],
             "return": {
-                "description": "URL al quale inviare la richiesta; viene inviata al server couchdb se <b>non</b> siamo\nin appMode, altrimenti viene inviata al server nodeJS che controlla la registrazione.",
+                "description": "URL al quale inviare la richiesta.",
                 "type": "String"
             },
             "class": "Georep",
