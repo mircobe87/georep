@@ -922,13 +922,12 @@ Georep.prototype.signupRemoteUser = function(callback){
 };
 
 /**
- * Chiede al server di aggiornare il nickname e la e-mail dell&#x27;utente locale con
- * dei nuovi valori. Se l&#x27;operazione riesce, vendono aggiornati anche i valori locali.
+ * Chiede al server di aggiornare la e-mail dell&#x27;utente locale con
+ * un nuovo valore. Se l&#x27;operazione riesce, viene aggiornato anche il valore locale.
  * @method updateRemoteUser
- * @param {object} userConf oggetto &lt;code&gt;userConf&lt;/code&gt; con i nuovi valori per
- *                 &lt;b&gt;&lt;code&gt;nick&lt;/code&gt;&lt;/b&gt; e &lt;b&gt;&lt;code&gt;mail&lt;/code&gt;&lt;/b&gt;. Le altre
- *                 properties vengono ignorate e possono essere anche omesse in
- *                 questo caso.
+ * @param {object} userConf oggetto &lt;code&gt;userConf&lt;/code&gt; con il nuovo valore per
+ *                 &lt;b&gt;&lt;code&gt;mail&lt;/code&gt;&lt;/b&gt;. Le altre properties vengono ignorate
+ *                 e possono essere anche omesse in questo caso.
  * @param {function} callback funzione che viene eseguita al termine dell&#x27;interazione con il server.
  */
 Georep.prototype.updateRemoteUser = function(userConf, callback){
@@ -942,9 +941,7 @@ Georep.prototype.updateRemoteUser = function(userConf, callback){
 			error: &#x27;Impossibile aggiornare l\&#x27;utente, parametro non valido.&#x27;,
 			args: arguments
 		};
-	} else if (
-	!userConf.nick      || typeof userConf.nick      != &#x27;string&#x27; ||
-	!userConf.mail      || typeof userConf.mail      != &#x27;string&#x27; ){
+	} else if (!userConf.mail || typeof userConf.mail != &#x27;string&#x27; ){
 		throw {
 			error: &#x27;Impossibile settare &quot;user&quot;, uno o piu\&#x27; properties non valide.&#x27;,
 			args: arguments
@@ -965,7 +962,7 @@ Georep.prototype.updateRemoteUser = function(userConf, callback){
 				var newLocalUser = {
 					name: tmpService.getUser().getName(),
 					password: tmpService.getUser().getPassword(),
-					nick: userConf.nick,
+					nick: tmpService.getUser().getNick(),
 					mail: userConf.mail
 				};
 				var newRemoteUser = newLocalUser;

@@ -603,13 +603,13 @@
         {
             "file": "lib/georep.js",
             "line": 830,
-            "description": "Chiede al server di aggiornare il nickname e la e-mail dell'utente locale con\ndei nuovi valori. Se l'operazione riesce, vendono aggiornati anche i valori locali.",
+            "description": "Chiede al server di aggiornare la e-mail dell'utente locale con\nun nuovo valore. Se l'operazione riesce, viene aggiornato anche il valore locale.",
             "itemtype": "method",
             "name": "updateRemoteUser",
             "params": [
                 {
                     "name": "userConf",
-                    "description": "oggetto <code>userConf</code> con i nuovi valori per\n                <b><code>nick</code></b> e <b><code>mail</code></b>. Le altre\n                properties vengono ignorate e possono essere anche omesse in\n                questo caso.",
+                    "description": "oggetto <code>userConf</code> con il nuovo valore per\n                <b><code>mail</code></b>. Le altre properties vengono ignorate\n                e possono essere anche omesse in questo caso.",
                     "type": "Object"
                 },
                 {
@@ -623,7 +623,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 910,
+            "line": 907,
             "description": "Chiede al server tutte le informazioni sull'utente locale",
             "itemtype": "method",
             "name": "getRemoteUser",
@@ -639,7 +639,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 950,
+            "line": 947,
             "description": "Controlla che un oggetto <code>georepConf</code> sia corretto.",
             "access": "private",
             "tagname": "",
@@ -661,7 +661,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 974,
+            "line": 971,
             "description": "Controlla che un oggetto che rappresenta un punto sulla mappa sia corretto.",
             "access": "private",
             "tagname": "",
@@ -683,7 +683,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 988,
+            "line": 985,
             "description": "Prepara il giusto url da usare per l'invio di una richiesta di registrazione dell'utente locale.\nPer comporre l'URL usa le informazioni sul server NodeJS specificate nelle costanti.",
             "access": "private",
             "tagname": "",
