@@ -327,6 +327,7 @@ var georep = {
 				var newDoc = {};
 				newDoc.userId = georep.user._id;
 				newDoc.title = doc.title;
+				newDoc.date = (new Date()).getTime();
 				newDoc.msg = doc.msg;
 				newDoc.loc = doc.loc;
 				newDoc._attachments = {
