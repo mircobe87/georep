@@ -325,6 +325,13 @@ var service = new Georep( georepConf );</code></pre>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_getLastDocs">getLastDocs</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_getRemoteUser">getRemoteUser</a>
 
                                 
@@ -461,7 +468,7 @@ var service = new Georep( georepConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l748"><code>lib&#x2F;georep.js:748</code></a>
+        <a href="../files/lib_georep.js.html#l814"><code>lib&#x2F;georep.js:814</code></a>
         
         </p>
 
@@ -556,7 +563,7 @@ var service = new Georep( georepConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l947"><code>lib&#x2F;georep.js:947</code></a>
+        <a href="../files/lib_georep.js.html#l1013"><code>lib&#x2F;georep.js:1013</code></a>
         
         </p>
 
@@ -970,6 +977,120 @@ Per esempio:</p>
 </div>
 
                 
+                    <div id="method_getLastDocs" class="method item">
+    <h3 class="name"><code>getLastDocs</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>nDocs</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
+                        <code>callback</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l638"><code>lib&#x2F;georep.js:638</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Chiede al server le ultime nDocs segnalazioni inviate al server.</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">nDocs</code>
+                        <span class="type">Number</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>numero di segnalazioni da chiedere</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>funzione chiamata al termine della
+    richiesta al server. In caso di errore, &#39;err&#39; contiene un oggetto
+    che descrive l&#39;errore altrimenti &#39;data&#39; contiene il risultato
+    della query.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
                     <div id="method_getRemoteUser" class="method item">
     <h3 class="name"><code>getRemoteUser</code></h3>
 
@@ -1012,7 +1133,7 @@ Per esempio:</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l907"><code>lib&#x2F;georep.js:907</code></a>
+        <a href="../files/lib_georep.js.html#l973"><code>lib&#x2F;georep.js:973</code></a>
         
         </p>
 
@@ -1180,7 +1301,7 @@ Per esempio:</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l638"><code>lib&#x2F;georep.js:638</code></a>
+        <a href="../files/lib_georep.js.html#l693"><code>lib&#x2F;georep.js:693</code></a>
         
         </p>
 
@@ -1365,7 +1486,7 @@ il suo identificatore unico.</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l985"><code>lib&#x2F;georep.js:985</code></a>
+        <a href="../files/lib_georep.js.html#l1051"><code>lib&#x2F;georep.js:1051</code></a>
         
         </p>
 
@@ -1475,7 +1596,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l971"><code>lib&#x2F;georep.js:971</code></a>
+        <a href="../files/lib_georep.js.html#l1037"><code>lib&#x2F;georep.js:1037</code></a>
         
         </p>
 
@@ -1552,6 +1673,12 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
                 <li class="arg">
                     
+                        <code>attach</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code>callback</code>
                     
                 </li>
@@ -1585,7 +1712,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l686"><code>lib&#x2F;georep.js:686</code></a>
+        <a href="../files/lib_georep.js.html#l741"><code>lib&#x2F;georep.js:741</code></a>
         
         </p>
 
@@ -1616,6 +1743,23 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
 
                     <div class="param-description">
                         <p>nuovo documento da inviare al server</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">attach</code>
+                        <span class="type">Boolean</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p><b>true</b>: invia al server anche l&#39;allegato (<code>img: { ...</code> );<br>
+<b>false</b>: ignora la property &#39;img&#39; e invia al server un documento privo di allegato.</p>
 
                     </div>
 
@@ -1690,7 +1834,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l782"><code>lib&#x2F;georep.js:782</code></a>
+        <a href="../files/lib_georep.js.html#l848"><code>lib&#x2F;georep.js:848</code></a>
         
         </p>
 
@@ -1785,7 +1929,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l830"><code>lib&#x2F;georep.js:830</code></a>
+        <a href="../files/lib_georep.js.html#l896"><code>lib&#x2F;georep.js:896</code></a>
         
         </p>
 

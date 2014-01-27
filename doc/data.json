@@ -529,6 +529,27 @@
         {
             "file": "lib/georep.js",
             "line": 638,
+            "description": "Chiede al server le ultime nDocs segnalazioni inviate al server.",
+            "itemtype": "method",
+            "name": "getLastDocs",
+            "params": [
+                {
+                    "name": "nDocs",
+                    "description": "numero di segnalazioni da chiedere",
+                    "type": "Number"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione chiamata al termine della\n    richiesta al server. In caso di errore, 'err' contiene un oggetto\n    che descrive l'errore altrimenti 'data' contiene il risultato\n    della query.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 693,
             "description": "Chiede al database tutti i documenti creati da un determinato utente indicando\nil suo identificatore unico.",
             "itemtype": "method",
             "name": "getUserDocs",
@@ -549,7 +570,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 686,
+            "line": 741,
             "description": "Invia al server un nuovo documento",
             "itemtype": "method",
             "name": "postDoc",
@@ -558,6 +579,11 @@
                     "name": "doc",
                     "description": "nuovo documento da inviare al server",
                     "type": "Object"
+                },
+                {
+                    "name": "attach",
+                    "description": "\n<b>true</b>: invia al server anche l'allegato (<code>img: { ...</code> );<br>\n<b>false</b>: ignora la property 'img' e invia al server un documento privo di allegato.",
+                    "type": "Boolean"
                 },
                 {
                     "name": "callback",
@@ -570,7 +596,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 748,
+            "line": 814,
             "description": "Verifica se l'utente locale è già registrato sul server.",
             "itemtype": "method",
             "name": "checkRemoteUser",
@@ -586,7 +612,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 782,
+            "line": 848,
             "description": "Richiede al server di registrare l'utente locale",
             "itemtype": "method",
             "name": "signupRemoteUser",
@@ -602,7 +628,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 830,
+            "line": 896,
             "description": "Chiede al server di aggiornare la e-mail dell'utente locale con\nun nuovo valore. Se l'operazione riesce, viene aggiornato anche il valore locale.",
             "itemtype": "method",
             "name": "updateRemoteUser",
@@ -623,7 +649,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 907,
+            "line": 973,
             "description": "Chiede al server tutte le informazioni sull'utente locale",
             "itemtype": "method",
             "name": "getRemoteUser",
@@ -639,7 +665,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 947,
+            "line": 1013,
             "description": "Controlla che un oggetto <code>georepConf</code> sia corretto.",
             "access": "private",
             "tagname": "",
@@ -661,7 +687,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 971,
+            "line": 1037,
             "description": "Controlla che un oggetto che rappresenta un punto sulla mappa sia corretto.",
             "access": "private",
             "tagname": "",
@@ -683,7 +709,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 985,
+            "line": 1051,
             "description": "Prepara il giusto url da usare per l'invio di una richiesta di registrazione dell'utente locale.\nPer comporre l'URL usa le informazioni sul server NodeJS specificate nelle costanti.",
             "access": "private",
             "tagname": "",
