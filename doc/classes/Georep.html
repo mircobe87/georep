@@ -114,61 +114,60 @@
 <div class="box intro">
     <h3>Georep</h3>
 <p>
-    Definisce un interfaccia per utilizzare i servizi offerti dal database couchdb
-    remoto.
+Definisce un interfaccia per utilizzare i servizi offerti dal database couchdb
+remoto.
 </p>
 <p>
-    Per poter comunicare con il database e inviare query è necessario specificare
-    il database remoto e il nostro utente per permettere che il server ci autentifichi e,
-    nel caso non fossimo un utente già registrato dobbiamo provvedere anche a questo. 
+Per poter comunicare con il database e inviare query è necessario specificare
+il database remoto e il nostro utente per permettere che il server ci autentifichi e,
+nel caso non fossimo un utente già registrato dobbiamo provvedere anche a questo.
 </p>
 <p>
-    Per inizializzare una nuova interfaccia dobbiamo prima definire un oggetto <b><code>georepConf</code></b>
-    che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
-    <ul>
-        <li><b><code>user</code></b> - <i>User</i>: un istanza di un oggetto <a href="../classes/User.html" class="crosslink">User</a>
-        <li><b><code>db</code></b> - <i>DB</i>: un istanza di un oggetto <a href="../classes/DB.html" class="crosslink">DB</a>
-    </ul>
+Per inizializzare una nuova interfaccia dobbiamo prima definire un oggetto <b><code>georepConf</code></b>
+che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+<ul>
+<li><b><code>user</code></b> - <i>User</i>: un istanza di un oggetto <a href="../classes/User.html" class="crosslink">User</a>
+<li><b><code>db</code></b> - <i>DB</i>: un istanza di un oggetto <a href="../classes/DB.html" class="crosslink">DB</a>
+</ul>
 </p>
 <h3>Esempio:</h3>
 
-<pre class="code prettyprint"><code>var georepConf = {
-    user: new User( userConf ),
-    db: new DB( dbConf )
-};
-
-var service = new Georep( georepConf );</code></pre>
+<p>var georepConf = {
+        user: new User( userConf ),
+        db: new DB( dbConf )
+    };</p>
+<p>var service = new Georep( georepConf );</p>
 <p>
-    I metodi che interagiscono con il server sono asincroni e quindi necessitano
-    di una funzione di <b>callback</b> che verrà eseguita al termine dell&#39;interazione
-    con il server che avrà la funzione di elaborare i dati restituiti dal server
-    o gestire eventuali errori.
+I metodi che interagiscono con il server sono asincroni e quindi necessitano
+di una funzione di <b>callback</b> che verrà eseguita al termine dell&#39;interazione
+con il server che avrà la funzione di elaborare i dati restituiti dal server
+o gestire eventuali errori.
 </p>
 <p>
-    La funzione di callback deve ammettere 2 parametri che al momento della
-    chiamata verranno utilizzati in questo modo:
-    <ul>
-        <li>
-            se si è verificato un errore, il <b>primo</b> parametro conterrà le informazioni
-            relative mentre il <b>secondo</b> sarà settato ad <code>undefined</code>;
-        </li>
-        <li>
-            se la query è andata a buon fine allora il <b>primo</b> parametro sarà
-            <code>undefined</code> e il <b>secondo</b> conterrà la risposta inviata dal
-            server.
-        </li>
-    </ul>
+La funzione di callback deve ammettere 2 parametri che al momento della
+chiamata verranno utilizzati in questo modo:
+<ul>
+<li>
+se si è verificato un errore, il <b>primo</b> parametro conterrà le informazioni
+relative mentre il <b>secondo</b> sarà settato ad <code>undefined</code>;
+</li>
+<li>
+se la query è andata a buon fine allora il <b>primo</b> parametro sarà
+<code>undefined</code> e il <b>secondo</b> conterrà la risposta inviata dal
+server.
+</li>
+</ul>
 </p>
 <h3>Esempio:</h3>
 <p>Una callback valida potrebbe essere:</p>
 
-<pre class="code prettyprint"><code>var callback = function (err, data) {
-    if(!err) {
-        // nessun errore, posso lavorare con &#39;data&#39;...
-    } else {
-        // si è verificato un errore descritto in &#39;err&#39;.
-    }
-};</code></pre>
+<p>var callback = function (err, data) {
+        if(!err) {
+            // nessun errore, posso lavorare con &#39;data&#39;...
+        } else {
+            // si è verificato un errore descritto in &#39;err&#39;.
+        }
+    };</p>
 
 </div>
 
@@ -339,6 +338,13 @@ var service = new Georep( georepConf );</code></pre>
                             </li>
                         
                             <li class="index-item method">
+                                <a href="#method_getRemoteUser">getRemoteUser</a>
+
+                                
+                                
+                            </li>
+                        
+                            <li class="index-item method">
                                 <a href="#method_getUser">getUser</a>
 
                                 
@@ -468,7 +474,7 @@ var service = new Georep( georepConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l814"><code>lib&#x2F;georep.js:814</code></a>
+        <a href="../files/lib_georep.js.html#l853"><code>lib&#x2F;georep.js:853</code></a>
         
         </p>
 
@@ -563,7 +569,7 @@ var service = new Georep( georepConf );</code></pre>
             
         
         
-        <a href="../files/lib_georep.js.html#l1013"><code>lib&#x2F;georep.js:1013</code></a>
+        <a href="../files/lib_georep.js.html#l1129"><code>lib&#x2F;georep.js:1129</code></a>
         
         </p>
 
@@ -886,7 +892,7 @@ unico interno al database.</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l573"><code>lib&#x2F;georep.js:573</code></a>
+        <a href="../files/lib_georep.js.html#l580"><code>lib&#x2F;georep.js:580</code></a>
         
         </p>
 
@@ -906,10 +912,10 @@ che deve avere 2 properties:</p>
     <li><b><code>lng</code></b> - <i>number</i>: compreso tra -180 e 180 che indica la longitudine <b>est</b>
 </ul>
 Per esempio:</p>
-<pre class="code prettyprint"><code>var mapPoint = {
-    lat: 43.720736,
-    lng: 10.408392
-}</code></pre>
+<p>var mapPoint = {
+        lat: 43.720736,
+        lng: 10.408392
+    }</p>
 
     </div>
 
@@ -1025,7 +1031,7 @@ Per esempio:</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l638"><code>lib&#x2F;georep.js:638</code></a>
+        <a href="../files/lib_georep.js.html#l652"><code>lib&#x2F;georep.js:652</code></a>
         
         </p>
 
@@ -1100,6 +1106,12 @@ Per esempio:</p>
             
                 <li class="arg">
                     
+                        <code>id</code>
+                    
+                </li>
+            
+                <li class="arg">
+                    
                         <code>callback</code>
                     
                 </li>
@@ -1133,7 +1145,112 @@ Per esempio:</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l973"><code>lib&#x2F;georep.js:973</code></a>
+        <a href="../files/lib_georep.js.html#l1074"><code>lib&#x2F;georep.js:1074</code></a>
+        
+        </p>
+
+
+        
+
+        
+    </div>
+
+    <div class="description">
+        <p>Chiede al server le informazioni dell&#39;utente con un certo id</p>
+
+    </div>
+
+    
+        <div class="params">
+            <h4>Parameters:</h4>
+
+            <ul class="params-list">
+            
+                <li class="param">
+                    
+                        <code class="param-name">id</code>
+                        <span class="type">String</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>identificatore univoco che identifica un utente sul server</p>
+
+                    </div>
+
+                    
+                </li>
+            
+                <li class="param">
+                    
+                        <code class="param-name">callback</code>
+                        <span class="type">Function</span>
+                    
+
+                    
+
+                    <div class="param-description">
+                        <p>funzione che viene eseguita al termine dell&#39;interazione con il server.</p>
+
+                    </div>
+
+                    
+                </li>
+            
+            </ul>
+        </div>
+    
+
+    
+
+    
+</div>
+
+                
+                    <div id="method_getRemoteUser" class="method item">
+    <h3 class="name"><code>getRemoteUser</code></h3>
+
+    
+        <div class="args">
+            <span class="paren">(</span><ul class="args-list inline commas">
+            
+                <li class="arg">
+                    
+                        <code>callback</code>
+                    
+                </li>
+            
+            </ul><span class="paren">)</span>
+        </div>
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    
+
+    <div class="meta">
+        
+            
+                
+                <p>
+                
+                Defined in
+                
+            
+        
+        
+        <a href="../files/lib_georep.js.html#l1030"><code>lib&#x2F;georep.js:1030</code></a>
         
         </p>
 
@@ -1301,7 +1418,7 @@ Per esempio:</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l693"><code>lib&#x2F;georep.js:693</code></a>
+        <a href="../files/lib_georep.js.html#l716"><code>lib&#x2F;georep.js:716</code></a>
         
         </p>
 
@@ -1486,7 +1603,7 @@ il suo identificatore unico.</p>
             
         
         
-        <a href="../files/lib_georep.js.html#l1051"><code>lib&#x2F;georep.js:1051</code></a>
+        <a href="../files/lib_georep.js.html#l1167"><code>lib&#x2F;georep.js:1167</code></a>
         
         </p>
 
@@ -1596,7 +1713,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l1037"><code>lib&#x2F;georep.js:1037</code></a>
+        <a href="../files/lib_georep.js.html#l1153"><code>lib&#x2F;georep.js:1153</code></a>
         
         </p>
 
@@ -1673,7 +1790,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
                 <li class="arg">
                     
-                        <code>attach</code>
+                        <code>attach!~YUIDOC_LINE~!&lt;b&gt;true&lt;/b&gt;:</code>
                     
                 </li>
             
@@ -1712,7 +1829,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l741"><code>lib&#x2F;georep.js:741</code></a>
+        <a href="../files/lib_georep.js.html#l772"><code>lib&#x2F;georep.js:772</code></a>
         
         </p>
 
@@ -1751,14 +1868,14 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
                 <li class="param">
                     
-                        <code class="param-name">attach</code>
+                        <code class="param-name">attach!~YUIDOC_LINE~!&lt;b&gt;true&lt;/b&gt;:</code>
                         <span class="type">Boolean</span>
                     
 
                     
 
                     <div class="param-description">
-                        <p><b>true</b>: invia al server anche l&#39;allegato (<code>img: { ...</code> );<br>
+                        <p>invia al server anche l&#39;allegato (<code>img: { ...</code> );<br>
 <b>false</b>: ignora la property &#39;img&#39; e invia al server un documento privo di allegato.</p>
 
                     </div>
@@ -1834,7 +1951,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l848"><code>lib&#x2F;georep.js:848</code></a>
+        <a href="../files/lib_georep.js.html#l893"><code>lib&#x2F;georep.js:893</code></a>
         
         </p>
 
@@ -1929,7 +2046,7 @@ Per comporre l&#39;URL usa le informazioni sul server NodeJS specificate nelle c
             
         
         
-        <a href="../files/lib_georep.js.html#l896"><code>lib&#x2F;georep.js:896</code></a>
+        <a href="../files/lib_georep.js.html#l947"><code>lib&#x2F;georep.js:947</code></a>
         
         </p>
 

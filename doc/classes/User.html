@@ -114,34 +114,33 @@
 <div class="box intro">
     <h3>User</h3>
 <p>
-    Definisce l&#39;utente locale che utilizzerà il database remoto.<br>
-    Tutte le segnalazioni creare e inviate al server saranno associate a questo utente.
+Definisce l&#39;utente locale che utilizzerà il database remoto.<br>
+Tutte le segnalazioni creare e inviate al server saranno associate a questo utente.
 </p>
 <p>
-    Ogni utente è identificato sul server da una coppia <i>username</i> e <i>password</i>
-    ed è personalizzato da un <i>nickname</i> e da un contatto <i>e-mail</i> visibili
-    agli altri utenti.
+Ogni utente è identificato sul server da una coppia <i>username</i> e <i>password</i>
+ed è personalizzato da un <i>nickname</i> e da un contatto <i>e-mail</i> visibili
+agli altri utenti.
 </p>
 <p>
-    Per istanziare un nuovo utente bisogna definire prima un oggetto <b><code>userConf</code></b>
-    che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
-    <ul>
-        <li><b><code>name</code></b> - <i>string</i>: user name utilizzato per il login
-        <li><b><code>password</code></b> - <i>string</i>: password utilizzata per il login
-        <li><b><code>nick</code></b> - <i>string</i>: nome personalizzato per l&#39;utente
-        <li><b><code>mail</code></b> - <i>string</i>: contatto e-mail dell&#39;utente
-    </ul>
+Per istanziare un nuovo utente bisogna definire prima un oggetto <b><code>userConf</code></b>
+che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+<ul>
+<li><b><code>name</code></b> - <i>string</i>: user name utilizzato per il login
+<li><b><code>password</code></b> - <i>string</i>: password utilizzata per il login
+<li><b><code>nick</code></b> - <i>string</i>: nome personalizzato per l&#39;utente
+<li><b><code>mail</code></b> - <i>string</i>: contatto e-mail dell&#39;utente
+</ul>
 </p>
 <h3>Esempio:</h3>
 
-<pre class="code prettyprint"><code>var userConf = {
-    name: &quot;username&quot;,
-    password: &quot;1234&quot;,
-    nick: &quot;userNick&quot;,
-    mail: &quot;myemail@mail.com&quot;
-};
-
-var usr = new User( userConf );</code></pre>
+<p>var userConf = {
+        name: &quot;username&quot;,
+        password: &quot;1234&quot;,
+        nick: &quot;userNick&quot;,
+        mail: &quot;myemail@mail.com&quot;
+};</p>
+<p>var usr = new User( userConf );</p>
 
 </div>
 

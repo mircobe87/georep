@@ -29,7 +29,7 @@
             "tag": "module",
             "file": "lib/georep.js",
             "line": 392,
-            "description": "<p>Fornisce gli oggetti per poter utilizzare un db remoto couchdb esteso con geocouch.</p>\n<p>\n\tSul database è possibile immagazzinare record geo-referenziati che contengono le\n\tseguenti informazioni:\n\t<ul>\n\t\t<li><b><code>title</code></b> - <i>string</i>:\n\t\t\tTitolo per la segnalazione.\n\t\t</li>\n\t\t<li><b><code>msg</code></b> - <i>string</i>:\n\t\t\tDescrizione più dettagliata per la segnalazione.\n\t\t</li>\n\t\t<li><b><code>img</code></b> - <i>object</i>:\n\t\t\tImmagine allegata per documentare la segnalazione.\n\t\t\t<ul>\n\t\t\t\t<li><b><code>content_type</code></b> - <i>string</i>:\n\t\t\t\t\tTipo di contenuto, per esempio <code>\"image/jpg\"</code>.\n\t\t\t\t</li>\n\t\t\t\t<li><b><code>data</code></b> - <i>string</i>:\n\t\t\t\t\tCodifica <code>base64</code> del documento allegato.\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</li>\n\t\t<li><b><code>loc</code></b> - <i>object</i>:\n\t\t\tPosizione geografica della segnalazione.\n\t\t\t<ul>\n\t\t\t\t<li><b><code>latitude</code></b> - <i>number</i>:\n\t\t\t\t\tLatitudine Nord.\n\t\t\t\t</li>\n\t\t\t\t<li><b><code>longitude</code></b> - <i>number</i>:\n\t\t\t\t\tLongitudine Est.\n\t\t\t\t</li>\n\t\t\t</ul>\n\t\t</li>\n\t</ul>\n</p>"
+            "description": "<p>Fornisce gli oggetti per poter utilizzare un db remoto couchdb esteso con geocouch.</p>\n<p>\nSul database è possibile immagazzinare record geo-referenziati che contengono le\nseguenti informazioni:\n<ul>\n<li><b><code>title</code></b> - <i>string</i>:\nTitolo per la segnalazione.\n</li>\n<li><b><code>msg</code></b> - <i>string</i>:\nDescrizione più dettagliata per la segnalazione.\n</li>\n<li><b><code>img</code></b> - <i>object</i>:\nImmagine allegata per documentare la segnalazione.\n<ul>\n<li><b><code>content_type</code></b> - <i>string</i>:\nTipo di contenuto, per esempio <code>\"image/jpg\"</code>.\n</li>\n<li><b><code>data</code></b> - <i>string</i>:\nCodifica <code>base64</code> del documento allegato.\n</li>\n</ul>\n</li>\n<li><b><code>loc</code></b> - <i>object</i>:\nPosizione geografica della segnalazione.\n<ul>\n<li><b><code>latitude</code></b> - <i>number</i>:\nLatitudine Nord.\n</li>\n<li><b><code>longitude</code></b> - <i>number</i>:\nLongitudine Est.\n</li>\n</ul>\n</li>\n</ul>\n</p>"
         }
     },
     "classes": {
@@ -45,7 +45,7 @@
             "namespace": "",
             "file": "lib/georep.js",
             "line": 44,
-            "description": "<h3>User</h3>\n<p>\n\tDefinisce l'utente locale che utilizzerà il database remoto.<br>\n\tTutte le segnalazioni creare e inviate al server saranno associate a questo utente.\n</p>\n<p>\n\tOgni utente è identificato sul server da una coppia <i>username</i> e <i>password</i>\n\ted è personalizzato da un <i>nickname</i> e da un contatto <i>e-mail</i> visibili\n\tagli altri utenti.\n</p>\n<p>\n\tPer istanziare un nuovo utente bisogna definire prima un oggetto <b><code>userConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>name</code></b> - <i>string</i>: user name utilizzato per il login\n\t\t<li><b><code>password</code></b> - <i>string</i>: password utilizzata per il login\n\t\t<li><b><code>nick</code></b> - <i>string</i>: nome personalizzato per l'utente\n\t\t<li><b><code>mail</code></b> - <i>string</i>: contatto e-mail dell'utente\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar userConf = {\n\t\tname: \"username\",\n\t\tpassword: \"1234\",\n\t\tnick: \"userNick\",\n\t\tmail: \"myemail@mail.com\"\n\t};\n\t\n\tvar usr = new User( userConf );",
+            "description": "<h3>User</h3>\n<p>\nDefinisce l'utente locale che utilizzerà il database remoto.<br>\nTutte le segnalazioni creare e inviate al server saranno associate a questo utente.\n</p>\n<p>\nOgni utente è identificato sul server da una coppia <i>username</i> e <i>password</i>\ned è personalizzato da un <i>nickname</i> e da un contatto <i>e-mail</i> visibili\nagli altri utenti.\n</p>\n<p>\nPer istanziare un nuovo utente bisogna definire prima un oggetto <b><code>userConf</code></b>\nche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n<ul>\n<li><b><code>name</code></b> - <i>string</i>: user name utilizzato per il login\n<li><b><code>password</code></b> - <i>string</i>: password utilizzata per il login\n<li><b><code>nick</code></b> - <i>string</i>: nome personalizzato per l'utente\n<li><b><code>mail</code></b> - <i>string</i>: contatto e-mail dell'utente\n</ul>\n</p>\n<h3>Esempio:</h3>\n\nvar userConf = {\n\t\tname: \"username\",\n\t\tpassword: \"1234\",\n\t\tnick: \"userNick\",\n\t\tmail: \"myemail@mail.com\"\n};\n\nvar usr = new User( userConf );",
             "is_constructor": 1,
             "params": [
                 {
@@ -67,7 +67,7 @@
             "namespace": "",
             "file": "lib/georep.js",
             "line": 225,
-            "description": "<h3>DB</h3>\n<p>\n\tDefinisce il database remoto con il quale ci si vuole interfacciare.\n</p>\n<p>\n\tPer poter comunicare con il database remoto bisogna specificare il protocollo\n\timpiegato, l'indirizzo IP o hostname del macchina che ospita il servizio, il\n\tnumero di porta sulla quale il server è in ascolto in attesa di connessioni e\n\til nome del database sul quale di vuole operare;\n</p>\n<p>\n\tPer istanziare un nuovo database bisogna definire prima un oggetto <b><code>dbConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>proto</code></b> - <i>string</i>: protocollo di comunicazione (per il momento solo <b><code>http</code></b>)\n\t\t<li><b><code>host</code></b> - <i>string</i>: IP o hostname della macchina remota\n\t\t<li><b><code>port</code></b> - <i>number</i>: numero della porta remota in ascolto\n\t\t<li><b><code>name</code></b> - <i>string</i>: nome del database remoto\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar dbConf = {\n\t\tproto: \"http\",\n\t\thost: \"127.0.0.1\",\n\t\tport: 5984,\n\t\tname: \"posts\"\n\t};\n\t\n\tvar db = new DB( dbConf );",
+            "description": "<h3>DB</h3>\n<p>\nDefinisce il database remoto con il quale ci si vuole interfacciare.\n</p>\n<p>\nPer poter comunicare con il database remoto bisogna specificare il protocollo\nimpiegato, l'indirizzo IP o hostname del macchina che ospita il servizio, il\nnumero di porta sulla quale il server è in ascolto in attesa di connessioni e\nil nome del database sul quale di vuole operare;\n</p>\n<p>\nPer istanziare un nuovo database bisogna definire prima un oggetto <b><code>dbConf</code></b>\nche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n<ul>\n<li><b><code>proto</code></b> - <i>string</i>: protocollo di comunicazione (per il momento solo <b><code>http</code></b>)\n<li><b><code>host</code></b> - <i>string</i>: IP o hostname della macchina remota\n<li><b><code>port</code></b> - <i>number</i>: numero della porta remota in ascolto\n<li><b><code>name</code></b> - <i>string</i>: nome del database remoto\n</ul>\n</p>\n<h3>Esempio:</h3>\n\nvar dbConf = {\n\t\tproto: \"http\",\n\t\thost: \"127.0.0.1\",\n\t\tport: 5984,\n\t\tname: \"posts\"\n\t};\n\nvar db = new DB( dbConf );",
             "is_constructor": 1,
             "params": [
                 {
@@ -89,7 +89,7 @@
             "namespace": "",
             "file": "lib/georep.js",
             "line": 392,
-            "description": "<h3>Georep</h3>\n<p>\n\tDefinisce un interfaccia per utilizzare i servizi offerti dal database couchdb\n\tremoto.\n</p>\n<p>\n\tPer poter comunicare con il database e inviare query è necessario specificare\n\til database remoto e il nostro utente per permettere che il server ci autentifichi e,\n\tnel caso non fossimo un utente già registrato dobbiamo provvedere anche a questo. \n</p>\n<p>\n\tPer inizializzare una nuova interfaccia dobbiamo prima definire un oggetto <b><code>georepConf</code></b>\n\tche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n\t<ul>\n\t\t<li><b><code>user</code></b> - <i>User</i>: un istanza di un oggetto {{#crossLink \"User\"}}{{/crossLink}}\n\t\t<li><b><code>db</code></b> - <i>DB</i>: un istanza di un oggetto {{#crossLink \"DB\"}}{{/crossLink}}\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n\n\tvar georepConf = {\n\t\tuser: new User( userConf ),\n\t\tdb: new DB( dbConf )\n\t};\n\t\n\tvar service = new Georep( georepConf );\n\n<p>\n\tI metodi che interagiscono con il server sono asincroni e quindi necessitano\n\tdi una funzione di <b>callback</b> che verrà eseguita al termine dell'interazione\n\tcon il server che avrà la funzione di elaborare i dati restituiti dal server\n\to gestire eventuali errori.\n</p>\n<p>\n\tLa funzione di callback deve ammettere 2 parametri che al momento della\n\tchiamata verranno utilizzati in questo modo:\n\t<ul>\n\t\t<li>\n\t\t\tse si è verificato un errore, il <b>primo</b> parametro conterrà le informazioni\n\t\t\trelative mentre il <b>secondo</b> sarà settato ad <code>undefined</code>;\n\t\t</li>\n\t\t<li>\n\t\t\tse la query è andata a buon fine allora il <b>primo</b> parametro sarà\n\t\t\t<code>undefined</code> e il <b>secondo</b> conterrà la risposta inviata dal\n\t\t\tserver.\n\t\t</li>\n\t</ul>\n</p>\n<h3>Esempio:</h3>\n<p>Una callback valida potrebbe essere:</p>\n\n\tvar callback = function (err, data) {\n\t\tif(!err) {\n\t\t\t// nessun errore, posso lavorare con 'data'...\n\t\t} else {\n\t\t\t// si è verificato un errore descritto in 'err'.\n\t\t}\n\t};",
+            "description": "<h3>Georep</h3>\n<p>\nDefinisce un interfaccia per utilizzare i servizi offerti dal database couchdb\nremoto.\n</p>\n<p>\nPer poter comunicare con il database e inviare query è necessario specificare\nil database remoto e il nostro utente per permettere che il server ci autentifichi e,\nnel caso non fossimo un utente già registrato dobbiamo provvedere anche a questo.\n</p>\n<p>\nPer inizializzare una nuova interfaccia dobbiamo prima definire un oggetto <b><code>georepConf</code></b>\nche specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:\n<ul>\n<li><b><code>user</code></b> - <i>User</i>: un istanza di un oggetto {{#crossLink \"User\"}}{{/crossLink}}\n<li><b><code>db</code></b> - <i>DB</i>: un istanza di un oggetto {{#crossLink \"DB\"}}{{/crossLink}}\n</ul>\n</p>\n<h3>Esempio:</h3>\n\nvar georepConf = {\n\t\tuser: new User( userConf ),\n\t\tdb: new DB( dbConf )\n\t};\n\nvar service = new Georep( georepConf );\n\n<p>\nI metodi che interagiscono con il server sono asincroni e quindi necessitano\ndi una funzione di <b>callback</b> che verrà eseguita al termine dell'interazione\ncon il server che avrà la funzione di elaborare i dati restituiti dal server\no gestire eventuali errori.\n</p>\n<p>\nLa funzione di callback deve ammettere 2 parametri che al momento della\nchiamata verranno utilizzati in questo modo:\n<ul>\n<li>\nse si è verificato un errore, il <b>primo</b> parametro conterrà le informazioni\nrelative mentre il <b>secondo</b> sarà settato ad <code>undefined</code>;\n</li>\n<li>\nse la query è andata a buon fine allora il <b>primo</b> parametro sarà\n<code>undefined</code> e il <b>secondo</b> conterrà la risposta inviata dal\nserver.\n</li>\n</ul>\n</p>\n<h3>Esempio:</h3>\n<p>Una callback valida potrebbe essere:</p>\n\nvar callback = function (err, data) {\n\t\tif(!err) {\n\t\t\t// nessun errore, posso lavorare con 'data'...\n\t\t} else {\n\t\t\t// si è verificato un errore descritto in 'err'.\n\t\t}\n\t};",
             "is_constructor": 1,
             "params": [
                 {
@@ -502,8 +502,8 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 573,
-            "description": "Chiede tutti i documenti che sono relativi ad una certa area geografica rettangolare\ndefinita dalle coordinate dei vertici in basso a sinistra e in alto a destra.\n\nUn vertice quindi è un punto sulla mappa che deve essere rappresentato da un oggetto\nche deve avere 2 properties:\n<ul>\n    <li><b><code>lat</code></b> - <i>number</i>: compreso tra -90 e 90 che indica la latitudine <b>nord</b>\n    <li><b><code>lng</code></b> - <i>number</i>: compreso tra -180 e 180 che indica la longitudine <b>est</b>\n</ul>\nPer esempio:\n\n\tvar mapPoint = {\n\t\tlat: 43.720736,\n\t\tlng: 10.408392\n\t}",
+            "line": 580,
+            "description": "Chiede tutti i documenti che sono relativi ad una certa area geografica rettangolare\ndefinita dalle coordinate dei vertici in basso a sinistra e in alto a destra.\n\nUn vertice quindi è un punto sulla mappa che deve essere rappresentato da un oggetto\nche deve avere 2 properties:\n<ul>\n    <li><b><code>lat</code></b> - <i>number</i>: compreso tra -90 e 90 che indica la latitudine <b>nord</b>\n    <li><b><code>lng</code></b> - <i>number</i>: compreso tra -180 e 180 che indica la longitudine <b>est</b>\n</ul>\nPer esempio:\n\nvar mapPoint = {\n\t\tlat: 43.720736,\n\t\tlng: 10.408392\n\t}",
             "itemtype": "method",
             "name": "getDocsInBox",
             "params": [
@@ -528,7 +528,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 638,
+            "line": 652,
             "description": "Chiede al server le ultime nDocs segnalazioni inviate al server.",
             "itemtype": "method",
             "name": "getLastDocs",
@@ -549,7 +549,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 693,
+            "line": 716,
             "description": "Chiede al database tutti i documenti creati da un determinato utente indicando\nil suo identificatore unico.",
             "itemtype": "method",
             "name": "getUserDocs",
@@ -570,7 +570,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 741,
+            "line": 772,
             "description": "Invia al server un nuovo documento",
             "itemtype": "method",
             "name": "postDoc",
@@ -581,8 +581,8 @@
                     "type": "Object"
                 },
                 {
-                    "name": "attach",
-                    "description": "\n<b>true</b>: invia al server anche l'allegato (<code>img: { ...</code> );<br>\n<b>false</b>: ignora la property 'img' e invia al server un documento privo di allegato.",
+                    "name": "attach!~YUIDOC_LINE~!<b>true</b>:",
+                    "description": "invia al server anche l'allegato (<code>img: { ...</code> );<br>\n<b>false</b>: ignora la property 'img' e invia al server un documento privo di allegato.",
                     "type": "Boolean"
                 },
                 {
@@ -596,7 +596,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 814,
+            "line": 853,
             "description": "Verifica se l'utente locale è già registrato sul server.",
             "itemtype": "method",
             "name": "checkRemoteUser",
@@ -612,7 +612,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 848,
+            "line": 893,
             "description": "Richiede al server di registrare l'utente locale",
             "itemtype": "method",
             "name": "signupRemoteUser",
@@ -628,7 +628,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 896,
+            "line": 947,
             "description": "Chiede al server di aggiornare la e-mail dell'utente locale con\nun nuovo valore. Se l'operazione riesce, viene aggiornato anche il valore locale.",
             "itemtype": "method",
             "name": "updateRemoteUser",
@@ -649,7 +649,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 973,
+            "line": 1030,
             "description": "Chiede al server tutte le informazioni sull'utente locale",
             "itemtype": "method",
             "name": "getRemoteUser",
@@ -665,7 +665,28 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 1013,
+            "line": 1074,
+            "description": "Chiede al server le informazioni dell'utente con un certo id",
+            "itemtype": "method",
+            "name": "getRemoteUser",
+            "params": [
+                {
+                    "name": "id",
+                    "description": "identificatore univoco che identifica un utente sul server",
+                    "type": "String"
+                },
+                {
+                    "name": "callback",
+                    "description": "funzione che viene eseguita al termine dell'interazione con il server.",
+                    "type": "Function"
+                }
+            ],
+            "class": "Georep",
+            "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 1129,
             "description": "Controlla che un oggetto <code>georepConf</code> sia corretto.",
             "access": "private",
             "tagname": "",
@@ -687,7 +708,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 1037,
+            "line": 1153,
             "description": "Controlla che un oggetto che rappresenta un punto sulla mappa sia corretto.",
             "access": "private",
             "tagname": "",
@@ -709,7 +730,7 @@
         },
         {
             "file": "lib/georep.js",
-            "line": 1051,
+            "line": 1167,
             "description": "Prepara il giusto url da usare per l'invio di una richiesta di registrazione dell'utente locale.\nPer comporre l'URL usa le informazioni sul server NodeJS specificate nelle costanti.",
             "access": "private",
             "tagname": "",
@@ -728,7 +749,33 @@
             },
             "class": "Georep",
             "module": "georep"
+        },
+        {
+            "file": "lib/georep.js",
+            "line": 1181,
+            "description": "Dato il messaggio di errore contenuto nel campo 'error' di un oggetto",
+            "params": [
+                {
+                    "name": "err",
+                    "description": ""
+                }
+            ],
+            "return": {
+                "description": "",
+                "type": "Boolean"
+            },
+            "class": "Georep",
+            "module": "georep"
         }
     ],
-    "warnings": []
+    "warnings": [
+        {
+            "message": "replacing incorrect tag: returns with return",
+            "line": " lib/georep.js:1181"
+        },
+        {
+            "message": "Missing item type\nDato il messaggio di errore contenuto nel campo 'error' di un oggetto",
+            "line": " lib/georep.js:1181"
+        }
+    ]
 }

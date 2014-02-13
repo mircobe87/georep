@@ -114,34 +114,33 @@
 <div class="box intro">
     <h3>DB</h3>
 <p>
-    Definisce il database remoto con il quale ci si vuole interfacciare.
+Definisce il database remoto con il quale ci si vuole interfacciare.
 </p>
 <p>
-    Per poter comunicare con il database remoto bisogna specificare il protocollo
-    impiegato, l&#39;indirizzo IP o hostname del macchina che ospita il servizio, il
-    numero di porta sulla quale il server è in ascolto in attesa di connessioni e
-    il nome del database sul quale di vuole operare;
+Per poter comunicare con il database remoto bisogna specificare il protocollo
+impiegato, l&#39;indirizzo IP o hostname del macchina che ospita il servizio, il
+numero di porta sulla quale il server è in ascolto in attesa di connessioni e
+il nome del database sul quale di vuole operare;
 </p>
 <p>
-    Per istanziare un nuovo database bisogna definire prima un oggetto <b><code>dbConf</code></b>
-    che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
-    <ul>
-        <li><b><code>proto</code></b> - <i>string</i>: protocollo di comunicazione (per il momento solo <b><code>http</code></b>)
-        <li><b><code>host</code></b> - <i>string</i>: IP o hostname della macchina remota
-        <li><b><code>port</code></b> - <i>number</i>: numero della porta remota in ascolto
-        <li><b><code>name</code></b> - <i>string</i>: nome del database remoto
-    </ul>
+Per istanziare un nuovo database bisogna definire prima un oggetto <b><code>dbConf</code></b>
+che specifichi tutte le sue informazioni; tale oggetto deve avere le seguenti properties:
+<ul>
+<li><b><code>proto</code></b> - <i>string</i>: protocollo di comunicazione (per il momento solo <b><code>http</code></b>)
+<li><b><code>host</code></b> - <i>string</i>: IP o hostname della macchina remota
+<li><b><code>port</code></b> - <i>number</i>: numero della porta remota in ascolto
+<li><b><code>name</code></b> - <i>string</i>: nome del database remoto
+</ul>
 </p>
 <h3>Esempio:</h3>
 
-<pre class="code prettyprint"><code>var dbConf = {
-    proto: &quot;http&quot;,
-    host: &quot;127.0.0.1&quot;,
-    port: 5984,
-    name: &quot;posts&quot;
-};
-
-var db = new DB( dbConf );</code></pre>
+<p>var dbConf = {
+        proto: &quot;http&quot;,
+        host: &quot;127.0.0.1&quot;,
+        port: 5984,
+        name: &quot;posts&quot;
+    };</p>
+<p>var db = new DB( dbConf );</p>
 
 </div>
 
